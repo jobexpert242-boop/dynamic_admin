@@ -1,0 +1,107 @@
+// "dev": [
+//     "Composer\\Config::disableProcessTimeout",
+//     "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+// ],
+
+Creating New Laravel Project
+First, create a new Laravel project using composer:
+
+composer create-project laravel/laravel your-project-name
+cd your-project-name
+Install Vue 3:
+
+npm install vue@latest
+Server-Side Setup
+1. Install Inertia Laravel Adapter
+composer require inertiajs/inertia-laravel
+2. Create Root Template
+Create a new file at resources/views/app.blade.php:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    @vite('resources/js/app.js')
+    @inertiaHead
+</head>
+<body>
+    @inertia
+</body>
+</html>
+3. Install and Configure Middleware
+Generate the Inertia middleware:
+
+php artisan inertia:middleware
+Add the middleware to your bootstrap/app.php:
+
+use App\Http\Middleware\HandleInertiaRequests;
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: [
+        HandleInertiaRequests::class,
+    ]);
+})
+Client-Side Setup
+1. Install Inertia Vue Adapter
+npm install @inertiajs/vue3
+Get Koriyapankaj’s stories in your inbox
+Join Medium for free to get updates from this writer.
+
+Enter your email
+Subscribe
+2. Configure Vue and Inertia
+Update your resources/js/app.js:
+
+import { createApp, h } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
+createInertiaApp({
+    resolve: name => {
+        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+        return pages[`./Pages/${name}.vue`]
+    },
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .mount(el)
+    },
+})
+3. Install and Configure Vite Vue Plugin
+Install the Vite Vue plugin:
+
+npm install @vitejs/plugin-vue
+Update your vite.config.js:
+
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+        vue()
+    ],
+});
+Testing the Setup
+1. Create a Test Page
+Create a new Vue component at resources/js/Pages/Home.vue:
+
+<template>
+    <h1>Hello world</h1>
+</template>
+2. Add Route
+Update your routes/web.php:
+
+use Inertia\Inertia;
+Route::get('/', function () {
+    return Inertia::render('Home');
+});
+3. Start Development Servers
+Run both Laravel and Vite development servers:
+
+# Terminal 1
+php artisan serve
+# Terminal 2
+npm run dev
+Visit http://localhost:8000 to see your application running.

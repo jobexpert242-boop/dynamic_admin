@@ -6,6 +6,7 @@ use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
+use Laravolt\Avatar\Facade as Avatar;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -35,34 +36,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-
-    // public function share(Request $request): array
-    // {
-    //     return array_merge(parent::share($request), [
-    //          'auth' => [
-    //             'user' => Auth::user() ? [
-    //                 'id' => Auth::user()->id,
-    //                 'name' => Auth::user()->name,
-    //                 'image' => Auth::user()->image,
-    //                 'roles' => Auth::user()->roles->pluck('name'),
-    //                 'unread' => Auth::user()->unreadNotifications()->count(),
-    //             ] : null,
-    //         ],
-    //         'flash' => [
-    //             'status' => fn() => $request->session()->get('status'),
-    //             'error' => fn() => $request->session()->get('error'),
-    //             'warning' => fn() => $request->session()->get('warning'),
-    //         ],
-    //         'locale' => app()->getLocale(),
-    //         'translations' => function () {
-    //             return [
-    //                 'messages' => __('messages'),
-    //             ];
-    //         },
-    //         'site' => SiteSetting::first(),
-    //     ]);
-    // }
-     public function share(Request $request): array
+    public function share(Request $request): array
     {
         $user = Auth::user();
 
@@ -71,7 +45,7 @@ class HandleInertiaRequests extends Middleware
             // ----------------------------
             // AUTH USER DATA
             // ----------------------------
-            'auth' => fn () => [
+            'auth' => fn() => [
                 'user' => $user ? [
                     'id'     => $user->id,
                     'name'   => $user->name,
@@ -79,6 +53,9 @@ class HandleInertiaRequests extends Middleware
                     'roles'  => $user->roles->pluck('name'),
                     'unread' => $user->unreadNotifications()->count(),
                 ] : null,
+                'avatar' => $request->user()
+                    ? Avatar::create($request->user()->name)->toBase64()
+                    : null,
             ],
 
             // ----------------------------
@@ -129,8 +106,8 @@ class HandleInertiaRequests extends Middleware
                             'children' => $buildTree($menu->id),
                         ];
                     })
-                    ->filter()
-                    ->values();
+                        ->filter()
+                        ->values();
                 };
 
                 $tree = $buildTree();

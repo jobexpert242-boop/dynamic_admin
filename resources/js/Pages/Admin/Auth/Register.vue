@@ -7,6 +7,7 @@ import FlashMessage from "@/Shared/FlashMessage.vue";
 const form = useForm({
     name: "",
     email: "",
+    termes: false,
     password: "",
     password_confirmation: "",
 });
@@ -84,18 +85,44 @@ function submit() {
                     />
                 </div>
 
+                <div class="mb-6">
+                    <div class="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            v-model="form.termes"
+                            class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                        />
+                        <a
+                            href="/termes-page"
+                            class="underline hover:text-indigo-500"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Accept Terms & Conditions
+                        </a>
+                    </div>
+                    <p v-if="form.errors.termes" class="text-red-700 mt-2">
+                        {{ form.errors.termes }}
+                    </p>
+                </div>
+
                 <button
                     type="submit"
-                    class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                    class="btn-success"
+                    :class="{ 'btn-spinner': form.processing }"
+                    :disabled="form.processing"
                 >
-                    Register
+                    <span>{{
+                        form.processing ? "Register..." : "Register"
+                    }}</span>
+                    <span v-if="form.processing" class="spinner"></span>
                 </button>
             </form>
 
             <div class="mt-4 text-center">
                 <Link
                     :href="route('login')"
-                    class="text-sm text-blue-600 hover:underline"
+                    class="text-sm text-indigo-600 hover:underline"
                 >
                     Already have an account? Login
                 </Link>

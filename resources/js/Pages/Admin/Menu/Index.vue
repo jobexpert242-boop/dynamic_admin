@@ -44,9 +44,8 @@ function submit() {
     } else {
         form.post("/admin/menus", {
             onSuccess: () => {
-                form.reset(),
-                location.reload();
-            }
+                form.reset(), location.reload();
+            },
         });
     }
 }
@@ -95,10 +94,7 @@ function highlight(text) {
     const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(`(${escapedKeyword})`, "gi");
 
-    return text.replace(
-        regex,
-        '<span class="bg-yellow-500">$1</span>'
-    );
+    return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
 </script>
 
@@ -111,10 +107,12 @@ function highlight(text) {
             type="success"
         />
         <Layout>
-        <Breadcrumb/>
+            <Breadcrumb />
             <div class="flex justify-between gap-3 font-robo">
                 <!-- Menu List -->
-                <div class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300"
+                >
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold w-1/3">All Menus</h2>
                         <div class="w-2/3">
@@ -127,14 +125,18 @@ function highlight(text) {
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full table-auto border border-gray-400 bg-white rounded shadow">
+                        <table
+                            class="min-w-full table-auto border border-gray-400 bg-white rounded shadow"
+                        >
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="px-4 py-2 text-left">#</th>
                                     <th class="px-4 py-2 text-left">Title</th>
                                     <th class="px-4 py-2 text-left">Parent</th>
                                     <th class="px-4 py-2 text-left">Route</th>
-                                    <th class="px-4 py-2 text-left">Permissions</th>
+                                    <th class="px-4 py-2 text-left">
+                                        Permissions
+                                    </th>
                                     <th class="px-4 py-2 text-left">Status</th>
                                     <th class="px-4 py-2 text-left">Icon</th>
                                     <!-- <th class="px-4 py-2 text-left">Admin Left</th> -->
@@ -152,24 +154,38 @@ function highlight(text) {
                                     class="border-t border-gray-400 hover:bg-gray-50"
                                 >
                                     <td class="px-4 py-2">{{ i + 1 }}</td>
-                                    <td class="px-4 py-2" v-html="highlight(menu.title)"></td>
+                                    <td
+                                        class="px-4 py-2"
+                                        v-html="highlight(menu.title)"
+                                    ></td>
                                     <td class="px-4 py-2">
-                                        {{ menu.parent?.title ?? '—' }}
+                                        {{ menu.parent?.title ?? "—" }}
                                     </td>
                                     <td class="px-4 py-2">{{ menu.route }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex flex-wrap">
-                                            <template v-if="Array.isArray(menu.permission_class)">
+                                            <template
+                                                v-if="
+                                                    Array.isArray(
+                                                        menu.permission_class
+                                                    )
+                                                "
+                                            >
+                                                <span
+                                                    v-for="(
+                                                        perm, index
+                                                    ) in menu.permission_class"
+                                                    :key="index"
+                                                    class="badge-success px-2 py-1 rounded text-sm"
+                                                >
+                                                    {{ perm }}
+                                                </span>
+                                            </template>
                                             <span
-                                                v-for="(perm, index) in menu.permission_class"
-                                                :key="index"
+                                                v-else
                                                 class="badge-success px-2 py-1 rounded text-sm"
                                             >
-                                                {{ perm }}
-                                            </span>
-                                            </template>
-                                            <span v-else class="badge-success px-2 py-1 rounded text-sm">
-                                            {{ menu.permission_class }}
+                                                {{ menu.permission_class }}
                                             </span>
                                         </div>
                                     </td>
@@ -212,7 +228,9 @@ function highlight(text) {
                                                 : `<i class='fa-solid fa-xmark text-red-500'></i>`
                                         "
                                     ></td>
-                                    <td class="px-4 py-2">{{ menu.order_by }}</td>
+                                    <td class="px-4 py-2">
+                                        {{ menu.order_by }}
+                                    </td>
                                     <td class="px-4 py-2 space-x-2">
                                         <button
                                             @click="edit(menu)"
@@ -235,7 +253,9 @@ function highlight(text) {
                 </div>
 
                 <!-- Menu Form -->
-                <div class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300"
+                >
                     <h2 class="text-lg font-semibold mb-4">
                         {{ editing ? "Edit" : "Create" }} Menu
                     </h2>
@@ -321,8 +341,19 @@ function highlight(text) {
                         <button
                             type="submit"
                             class="btn-success"
+                            :class="{ 'btn-spinner': form.processing }"
+                            :disabled="form.processing"
                         >
-                            {{ editing ? "Update" : "Create" }}
+                            <span>
+                                {{
+                                    form.processing
+                                        ? "Processing..."
+                                        : editing
+                                        ? "Update"
+                                        : "Create"
+                                }}
+                            </span>
+                            <span v-if="form.processing" class="spinner"></span>
                         </button>
                     </form>
                 </div>

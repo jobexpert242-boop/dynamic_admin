@@ -5,6 +5,9 @@ import FlashMessage from "@/Shared/FlashMessage.vue";
 import Breadcrumb from "@/Shared/Breadcrumb.vue";
 
 const page = usePage();
+const props = defineProps({
+    avatar: String,
+});
 
 const t = (key) => page.props.translations.messages[key] ?? key;
 </script>
@@ -33,6 +36,8 @@ const t = (key) => page.props.translations.messages[key] ?? key;
             <h1 class="text-2xl text-black">{{ t("welcome") }} sojib middle</h1>
             <p class="text-lg text-red-500">Sojib</p>
             <span class="text-gray-100">sojkibbbb</span>
+
+            <img :src="$page.props.auth.avatar" alt="Avatar" />
 
         </Layout>
     </div>

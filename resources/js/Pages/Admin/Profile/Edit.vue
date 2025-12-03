@@ -5,7 +5,7 @@ import FlashMessage from "@/Shared/FlashMessage.vue";
 import TextInput from "@/Shared/TextInput.vue";
 import FileInput from "@/Shared/FileInput.vue";
 import { route } from "ziggy-js";
-defineProps(['modelValue', 'label', 'error', 'type', 'placeholder', 'id']);
+defineProps(["modelValue", "label", "error", "type", "placeholder", "id"]);
 
 const user = usePage().props.user;
 
@@ -35,7 +35,9 @@ function submit() {
             :message="$page.props.flash.status"
             type="success"
         />
-        <div class="max-w-xl mx-auto bg-white p-6 rounded shadow border border-gray-300">
+        <div
+            class="max-w-xl mx-auto bg-white p-6 rounded shadow border border-gray-300"
+        >
             <h2 class="text-xl font-bold mb-4">My Profile</h2>
 
             <form @submit.prevent="submit" class="space-y-4">
@@ -97,12 +99,21 @@ function submit() {
                     />
                 </div>
 
-                <button
-                    type="submit"
-                    class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-                >
-                    Update Profile
-                </button>
+                <div class="flex justify-end">
+                    <button
+                        type="submit"
+                        class="btn rounded-sm fw-normal"
+                        :class="{ 'btn-spinner': form.processing }"
+                        :disabled="form.processing"
+                    >
+                        <span>{{
+                            form.processing
+                                ? "Update Profile..."
+                                : "Update Profile"
+                        }}</span>
+                        <span v-if="form.processing" class="spinner"></span>
+                    </button>
+                </div>
             </form>
         </div>
     </Layout>

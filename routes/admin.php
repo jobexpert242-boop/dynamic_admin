@@ -92,16 +92,19 @@ Route::get('/admin/notifications', [AdminController::class, 'notifications'])->n
 // })->middleware('auth');
 
 // grapes js editor
-Route::get('/p/{slug}', [PageController::class, 'show'])->name('pages.show');
+Route::get('/{slug}', [PageController::class, 'show'])->name('pages.show');
 
-Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(function () {
-    Route::prefix('admin')->group(function () {
-        Route::get('/grapesjs', [PageController::class,'grapesjs'])->name('pages.grapesjs');
-        Route::get('/editor', [PageController::class,'home'])->name('pages.editor');
-        Route::get('/pages/{id}/edit', [PageController::class, 'edit'])->name('pages.edit');
-        Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
-        Route::put('/pages/{id}', [PageController::class, 'update'])->name('pages.update');
-        Route::post('/upload-image', [PageController::class, 'uploadImage'])->name('pages.uploadImage');
-        Route::delete('/destroy/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
-    });
+Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->prefix('admin')->group(function () {
+    Route::get('/grapesjs', [PageController::class, 'grapesjs'])->name('pages.grapesjs');
+    Route::get('/editor', [PageController::class, 'home'])->name('pages.editor');
+    Route::get('/pages/{id}/edit', [PageController::class, 'edit'])->name('pages.edit');
+    Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
+    Route::put('/pages/{id}', [PageController::class, 'update'])->name('pages.update');
+
+    Route::post('/pages/{id}/grapes-store', [PageController::class, 'grapesStore'])->name('pages.grapes-store');
+    Route::get('/pages/{id}/grapes-load', [PageController::class, 'grapesLoad'])
+        ->name('pages.grapes-load');
+
+    Route::post('/upload-image', [PageController::class, 'uploadImage'])->name('pages.uploadImage');
+    Route::delete('/destroy/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
 });

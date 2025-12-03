@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Laravolt\Avatar\Facade as Avatar;
 
 class AdminController extends Controller
 {
@@ -14,7 +16,7 @@ class AdminController extends Controller
     public function adminDashboard()
     {
         $this->authorize('dashboard.show');
-
+        
         return Inertia::render('Admin/Index');
     }
 

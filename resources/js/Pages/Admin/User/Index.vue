@@ -100,7 +100,9 @@ function highlight(text) {
         <Layout>
             <Breadcrumb />
             <div class="flex justify-between gap-3 font-robo">
-                <div class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300"
+                >
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold w-1/3">All Users</h2>
                         <div class="w-2/3">
@@ -195,7 +197,9 @@ function highlight(text) {
                 </div>
 
                 <!-- Right: Form -->
-                <div class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300"
+                >
                     <h2 class="text-lg font-bold mb-4">
                         {{ selectedUser ? "Edit User" : "Add User" }}
                     </h2>
@@ -278,7 +282,6 @@ function highlight(text) {
                                         v-if="form.menus.includes(menu.id)"
                                         class="ml-6 mt-2"
                                     >
-                                        <!-- <label class="block font-medium mb-1 text-sm">Permissions for {{ menu.title }}</label> -->
                                         <div
                                             v-for="permission in menu.permissions"
                                             :key="permission.id"
@@ -298,8 +301,19 @@ function highlight(text) {
                         </div>
 
                         <div class="flex gap-2 justify-end border-t pt-5">
-                            <button type="submit" class="btn-success2">
-                                Save
+                            <button
+                                type="submit"
+                                class="btn rounded-sm fw-normal"
+                                :class="{ 'btn-spinner': form.processing }"
+                                :disabled="form.processing"
+                            >
+                                <span>{{
+                                    form.processing ? "Processing..." : "Save"
+                                }}</span>
+                                <span
+                                    v-if="form.processing"
+                                    class="spinner"
+                                ></span>
                             </button>
                             <button
                                 type="button"

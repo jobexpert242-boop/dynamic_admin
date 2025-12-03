@@ -73,7 +73,7 @@ function highlight(text) {
                     <div class="w-1/3">
                         <h2 class="text-lg font-bold">All Pages</h2>
                     </div>
-                    
+
                     <div class="w-1/3">
                         <SearchFilter
                             v-model="search"
@@ -82,9 +82,11 @@ function highlight(text) {
                             @reset="resetSearch"
                         />
                     </div>
-                    
+
                     <div class="w-1/3 flex justify-end">
-                         <Link :href="route('pages.editor')" class="btn-indigo">Add New Page</Link>
+                        <Link :href="route('pages.editor')" class="btn rounded-sm fw-normal"
+                            >Add New Page</Link
+                        >
                     </div>
                 </div>
 
@@ -111,14 +113,20 @@ function highlight(text) {
                             <td class="px-4 py-2">{{ page.slug }}</td>
                             <td class="px-4 py-2">
                                 <Link
+                                    :href="`/${page.slug}`"
+                                    target="_blank"
+                                    class="text-gray-500 hover:underline"
+                                    ><i class="fa fa-eye"></i></Link
+                                >
+                                <Link
                                     :href="route('pages.edit', page.id)"
-                                    class="text-blue-600 hover:underline"
+                                    class="text-blue-600 mx-4 hover:underline"
                                 >
                                     <i class="fa fa-edit"></i>
                                 </Link>
                                 <button
                                     @click="deletePage(page)"
-                                    class="text-red-600 hover:underline ml-2"
+                                    class="text-red-600 hover:underline"
                                 >
                                     <i class="fa fa-trash"></i>
                                 </button>

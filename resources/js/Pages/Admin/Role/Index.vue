@@ -82,10 +82,7 @@ function highlight(text) {
     const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(`(${escapedKeyword})`, "gi");
 
-    return text.replace(
-        regex,
-        '<span class="bg-yellow-500">$1</span>'
-    );
+    return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
 // search end
 </script>
@@ -99,10 +96,12 @@ function highlight(text) {
             type="success"
         />
         <Layout>
-        <Breadcrumb/>
+            <Breadcrumb />
             <div class="flex justify-between gap-3 font-robo">
                 <!-- Role List -->
-                <div class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300"
+                >
                     <div class="flex justify-between">
                         <h2 class="text-lg font-semibold mb-4 w-1/3">
                             All Roles
@@ -149,7 +148,10 @@ function highlight(text) {
                                 class="border-t"
                             >
                                 <td class="px-4 py-2">{{ i + 1 }}</td>
-                                <td class="px-4 py-2" v-html="highlight(role.name)"></td>
+                                <td
+                                    class="px-4 py-2"
+                                    v-html="highlight(role.name)"
+                                ></td>
                                 <td class="px-4 py-2">
                                     <span
                                         v-for="perm in role.permissions"
@@ -180,7 +182,9 @@ function highlight(text) {
                 </div>
 
                 <!-- Role Form -->
-                <div class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300"
+                >
                     <h2 class="text-lg font-semibold mb-4">
                         {{ editing ? "Edit Role" : "Create Role" }}
                     </h2>
@@ -217,8 +221,19 @@ function highlight(text) {
                         <button
                             type="submit"
                             class="btn-success"
+                            :class="{ 'btn-spinner': form.processing }"
+                            :disabled="form.processing"
                         >
-                            {{ editing ? "Update" : "Create" }}
+                            <span>
+                                {{
+                                    form.processing
+                                        ? "Processing..."
+                                        : editing
+                                        ? "Update"
+                                        : "Create"
+                                }}
+                            </span>
+                            <span v-if="form.processing" class="spinner"></span>
                         </button>
                     </form>
                 </div>

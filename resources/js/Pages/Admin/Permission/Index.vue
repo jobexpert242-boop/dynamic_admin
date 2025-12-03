@@ -52,10 +52,14 @@ function fetchUsers() {
 }
 
 function resetSearch() {
-  router.get('/admin/permissions', {}, {
-    preserveState: false,
-    replace: true,
-  })
+    router.get(
+        "/admin/permissions",
+        {},
+        {
+            preserveState: false,
+            replace: true,
+        }
+    );
 }
 function highlight(text) {
     const keyword = search.value.trim();
@@ -64,10 +68,7 @@ function highlight(text) {
     const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(`(${escapedKeyword})`, "gi");
 
-    return text.replace(
-        regex,
-        '<span class="bg-yellow-500">$1</span>'
-    );
+    return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
 // search end
 </script>
@@ -81,21 +82,23 @@ function highlight(text) {
             type="success"
         />
         <Layout>
-        <Breadcrumb/>
+            <Breadcrumb />
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Permission List -->
-                <div class="bg-white shadow rounded p-6 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 h-fit border border-gray-300"
+                >
                     <div class="flex justify-between">
                         <h2 class="text-lg font-semibold mb-4 w-1/2">
                             All Permissions
                         </h2>
                         <div class="w-1/2">
-                        <SearchFilter
-                            v-model="search"
-                            placeholder="Search permissions…"
-                            @search="fetchUsers"
-                            @reset="resetSearch"
-                        />
+                            <SearchFilter
+                                v-model="search"
+                                placeholder="Search permissions…"
+                                @search="fetchUsers"
+                                @reset="resetSearch"
+                            />
                         </div>
                     </div>
                     <table
@@ -117,7 +120,10 @@ function highlight(text) {
                                 class="border-t border-gray-400 hover:bg-gray-50"
                             >
                                 <td class="px-4 py-2">{{ i + 1 }}</td>
-                                <td class="px-4 py-2 font-medium text-gray-800" v-html="highlight(permission.name)"></td>
+                                <td
+                                    class="px-4 py-2 font-medium text-gray-800"
+                                    v-html="highlight(permission.name)"
+                                ></td>
                                 <td class="px-4 py-2">
                                     <button
                                         @click="edit(permission)"
@@ -139,7 +145,9 @@ function highlight(text) {
                 </div>
 
                 <!-- Permission Form -->
-                <div class="bg-white shadow rounded p-6 h-fit border border-gray-300">
+                <div
+                    class="bg-white shadow rounded p-6 h-fit border border-gray-300"
+                >
                     <h2 class="text-lg font-semibold mb-4">
                         {{ editing ? "Edit Permission" : "Create Permission" }}
                     </h2>
@@ -155,8 +163,19 @@ function highlight(text) {
                         <button
                             type="submit"
                             class="btn-success"
+                            :class="{ 'btn-spinner': form.processing }"
+                            :disabled="form.processing"
                         >
-                            {{ editing ? "Update" : "Create" }}
+                            <span>
+                                {{
+                                    form.processing
+                                        ? "Processing..."
+                                        : editing
+                                        ? "Update"
+                                        : "Create"
+                                }}
+                            </span>
+                            <span v-if="form.processing" class="spinner"></span>
                         </button>
                     </form>
                 </div>

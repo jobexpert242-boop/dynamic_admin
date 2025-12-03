@@ -2,7 +2,7 @@
 import { usePage, Link } from "@inertiajs/vue3";
 import RecursiveMenu from "@/Shared/RecursiveMenu.vue";
 import { route } from "ziggy-js";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Header from "../Components/Header.vue";
 import Language from "../Components/Language.vue";
 import Notification from "../Components/Notification.vue";
@@ -20,6 +20,33 @@ const auth = props.auth || page.props.auth || {};
 const menus = props.menus || page.props.menus || {};
 const currentYear = new Date().getFullYear();
 const collapsed = ref(false);
+const searchTerm = ref("");
+
+function filterRecursive(menusArray, term) {
+    return menusArray
+        .map((menu) => {
+            const children = menu.children
+                ? filterRecursive(menu.children, term)
+                : [];
+
+            const matches = menu.title
+                .toLowerCase()
+                .includes(term.toLowerCase());
+
+            if (matches || children.length) {
+                return { ...menu, children };
+            }
+            return null;
+        })
+        .filter(Boolean);
+}
+
+const filteredMenus = computed(() => {
+    if (!searchTerm.value) {
+        return menus.left;
+    }
+    return filterRecursive(menus.left, searchTerm.value);
+});
 </script>
 
 <template>
@@ -29,7 +56,12 @@ const collapsed = ref(false);
             class="bg-white border-b px-6 py-6 flex justify-between items-center"
         >
             <h1 class="leading-0 font-robo text-2xl font-bold text-black">
-                <Link :href="route('admin.dashboard')"><img :src="`/storage/${$page.props.site?.logo}`" class="h-12" alt="ComitsBD Admin"></Link>
+                <Link :href="route('admin.dashboard')"
+                    ><img
+                        :src="`/storage/${$page.props.site?.logo}`"
+                        class="h-12"
+                        alt="ComitsBD Admin"
+                /></Link>
             </h1>
 
             <RecursiveMenu
@@ -40,13 +72,10 @@ const collapsed = ref(false);
             />
 
             <div class="flex gap-5 items-center">
-                <Language/>
-
-                <DarkModeToggle/>
-
+                <Language />
+                <DarkModeToggle />
                 <Header />
-
-                <Notification/>
+                <Notification />
             </div>
         </header>
 
@@ -54,10 +83,26 @@ const collapsed = ref(false);
             <!-- Left Sidebar -->
             <aside
                 :class="[
-                    'bg-indigo-900 text-white p-4 transition-all duration-300 border-r',
+                    'text-white p-4 transition-all duration-300 border-r',
                     collapsed ? 'w-30' : 'w-56',
                 ]"
             >
+                <div class="relative w-full max-w-md mb-2">
+                    <div
+                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                    >
+                        <i
+                            class="fa-solid fa-magnifying-glass text-gray-400"
+                        ></i>
+                    </div>
+                    <input
+                        type="search"
+                        v-model="searchTerm"
+                        placeholder="Search Menu"
+                        class="search_css"
+                    />
+                </div>
+
                 <span
                     class="rounded mb-2 flex justify-end items-end w-full cursor-w-resize"
                     @click="collapsed = !collapsed"
@@ -67,8 +112,15 @@ const collapsed = ref(false);
                         style="display: flex; justify-content: center"
                     ></i>
                 </span>
-                <RecursiveMenu
+                <!-- <RecursiveMenu
                     v-for="menu in menus.left"
+                    :key="menu.id"
+                    :menu="menu"
+                    direction="vertical"
+                    :collapsed="collapsed"
+                /> -->
+                <RecursiveMenu
+                    v-for="menu in filteredMenus"
                     :key="menu.id"
                     :menu="menu"
                     direction="vertical"
@@ -77,7 +129,7 @@ const collapsed = ref(false);
             </aside>
 
             <!-- Main Content -->
-            <main class="flex-1 p-6 overflow-y-auto ">
+            <main class="flex-1 p-6 overflow-y-auto">
                 <slot />
             </main>
         </div>
@@ -102,7 +154,7 @@ const collapsed = ref(false);
                 | {{ currentYear }}
             </p>
         </footer>
-         <AccessibilityPanel />
-         <FontSizeBar/>
+        <AccessibilityPanel />
+        <FontSizeBar />
     </div>
 </template>

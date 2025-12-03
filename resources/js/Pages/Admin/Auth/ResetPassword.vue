@@ -3,6 +3,7 @@ import { Head, useForm } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
 import TextInput from "@/Shared/TextInput.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
+import { route } from "ziggy-js";
 
 const page = usePage();
 const form = useForm({
@@ -72,12 +73,25 @@ function submit() {
                         @input="form.errors.password_confirmation = null"
                     />
                 </div>
-                <button
-                    type="submit"
-                    class="mt-4 bg-green-600 text-white px-4 py-2 rounded"
-                >
-                    Reset Password
-                </button>
+                <div class="flex justify-between items-center mt-4">
+                    <Link
+                        :href="route('login')"
+                        class="underline hover:text-indigo-500"
+                        ><i class="fa-solid fa-left-long"></i> Back To
+                        Login</Link
+                    >
+                    <button
+                        type="submit"
+                        class="btn rounded-sm fw-normal"
+                        :class="{ 'btn-spinner': form.processing }"
+                        :disabled="form.processing"
+                    >
+                        <span>{{
+                            form.processing ? "Reset Password..." : "Reset Password"
+                        }}</span>
+                        <span v-if="form.processing" class="spinner"></span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>

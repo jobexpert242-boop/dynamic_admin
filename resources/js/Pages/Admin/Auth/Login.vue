@@ -5,12 +5,13 @@ import TextInput from "@/Shared/TextInput.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
 
 defineOptions({
-  layout: null,
+    layout: null,
 });
 
 const form = useForm({
     login: "",
     password: "",
+    remember: false,
 });
 
 function submit() {
@@ -66,18 +67,37 @@ function submit() {
                     />
                 </div>
 
+                <div class="mb-6">
+                    <div class="flex items-center">
+                        <input
+                            id="remember"
+                            type="checkbox"
+                            v-model="form.remember"
+                            class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                        />
+                        <label
+                            for="remember"
+                            class="ml-2 block text-sm text-gray-700"
+                            >Remember Me</label
+                        >
+                    </div>
+                </div>
+
                 <button
                     type="submit"
-                    class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+                    class="btn-success"
+                    :class="{ 'btn-spinner': form.processing }"
+                    :disabled="form.processing"
                 >
-                    Login
+                    <span>{{ form.processing ? "Login..." : "Login" }}</span>
+                    <span v-if="form.processing" class="spinner"></span>
                 </button>
             </form>
 
             <div class="mt-4 flex justify-between">
                 <Link
                     :href="route('admin.register')"
-                    class="text-sm text-blue-600 hover:underline"
+                    class="text-sm text-indigo-600 hover:underline"
                 >
                     Don't have an account? Register
                 </Link>

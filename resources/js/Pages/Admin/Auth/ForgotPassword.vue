@@ -1,7 +1,8 @@
 <script setup>
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import TextInput from "@/Shared/TextInput.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
+import { route } from "ziggy-js";
 
 const form = useForm({ email: "" });
 
@@ -45,12 +46,27 @@ function submit() {
                         @input="form.errors.email = null"
                     />
                 </div>
-                <button
-                    type="submit"
-                    class="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                    Send Reset Link
-                </button>
+                <div class="flex justify-between items-center mt-4">
+                    <Link
+                        :href="route('login')"
+                        class="underline hover:text-indigo-500"
+                        ><i class="fa-solid fa-left-long"></i> Back To
+                        Login</Link
+                    >
+                    <button
+                        type="submit"
+                        class="btn fw-normal rounded-sm"
+                        :class="{ 'btn-spinner': form.processing }"
+                        :disabled="form.processing"
+                    >
+                        <span>{{
+                            form.processing
+                                ? "Send Reset Link..."
+                                : "Send Reset Link"
+                        }}</span>
+                        <span v-if="form.processing" class="spinner"></span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>

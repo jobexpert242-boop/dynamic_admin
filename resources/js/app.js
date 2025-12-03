@@ -22,6 +22,11 @@ createInertiaApp({
         includeCSS: true,
         showSpinner: true,
     },
+    defaults: {
+        future: {
+            useDialogForErrorModal: true,
+        },
+    },
 });
 
 // const can = (permission) => {

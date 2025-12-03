@@ -6,6 +6,7 @@ import Dropdown from "@/Shared/Dropdown.vue";
 const props = defineProps({
     menus: Object,
     auth: Object,
+    avatar: String,
 });
 const page = usePage();
 const auth = props.auth || page.props.auth || {};
@@ -18,12 +19,7 @@ const auth = props.auth || page.props.auth || {};
                 <span class="text-gray-700 group-hover:text-indigo-600">
                     {{ auth.user?.name }}
                 </span>
-                <img
-                    :src="
-                        auth.user?.image
-                            ? `/storage/${auth.user.image}`
-                            : '/storage/images/user.png'
-                    "
+                <img :src="auth.user?.image ? `/storage/${auth.user.image}` : auth.avatar"
                     class="w-10 h-10 rounded-full object-cover ml-2"
                 />
                 <svg

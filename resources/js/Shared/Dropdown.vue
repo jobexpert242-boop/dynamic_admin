@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
     <teleport to="body">
       <div
         v-if="open"
-        class="absolute z-50 dropdown-panel"
+        class="absolute z-50 dropdown-panel left-0"
         :style="{ top: position.top, left: position.left, width: '170px' }"
         @click.stop
       >

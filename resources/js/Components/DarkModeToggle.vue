@@ -26,7 +26,7 @@ onMounted(() => {
 <template>
     <button
         @click="toggleQuickDark"
-        class="mb-1 bg-indigo-500 text-white p-2 rounded-full shadow-lg hover:bg-indigo-600 transition"
+        class="mb-1 btn rounded-full fw-normal shadow-lg"
         title="Toggle Dark Mode"
     >
         <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>

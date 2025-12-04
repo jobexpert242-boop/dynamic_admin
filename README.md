@@ -1,14 +1,11 @@
-# Laravel + Vue + Inertia Project Setup
+bbb# Laravel + Vue + Inertia Project Setup
 
 This guide walks you through installing and running a Laravel project with Vue.js and Inertia.js.  
 Follow the steps carefully to get your environment up and running.
 
----
-
 ## Prerequisites
 
 Make sure you have the following installed:
-
 -   PHP >= 8.1
 -   Composer
 -   Node.js >= 18 & npm (or Yarn)
@@ -16,34 +13,23 @@ Make sure you have the following installed:
 -   Git
 -   Laravel installer (optional)
 
----
-
 ## Installation Steps
 
 ### 1. Clone the Repository
 
-## bash
-
 git clone https://github.com/jobexpert242-boop/dynamic_admin.git
+</br>
 cd your-project
 
-# Install PHP Dependencies
-
-## bash
+## Install PHP Dependencies
 
 composer install
 
-# Install Node Dependencies
-
-## bash
+## Install Node Dependencies
 
 npm install
 
-## or
-
-yarn install
-
-# Environment Setup
+## Environment Setup
 
 Copy .env.example to .env and configure your database and app settings:
 
@@ -51,30 +37,49 @@ Copy .env.example to .env and configure your database and app settings:
 
 cp .env.example .env
 
-# Generate App Key
-
-## bash
+## Generate App Key
 
 php artisan key:generate
 
-# Run Migrations & Seeders
+## change your database mysql and name
 
-## bash
+## Run Migrations & Seeders
 
 php artisan migrate --seed
 
-# Build Frontend Assets
+## Storage Link
 
-## bash
+php artisan storage:link
 
-npm run dev
+## and Add your larave pusher app id and key 
 
-# for production
+PUSHER_APP_ID=your app id
+PUSHER_APP_KEY=your app key
+PUSHER_APP_SECRET=your secret key
+PUSHER_APP_CLUSTER=mt1
+
+VITE_PUSHER_APP_KEY=your app key
+VITE_PUSHER_APP_CLUSTER=mt1
+
+-------
+
+## or comment your bootstrap.js file pusher code
+## and comment Notification.vue pusher code
+
+-----
+
+## for production
 
 npm run build
 
-# Start the Development Server
+## Build Frontend Assets
 
-## bash
+npm run dev
+
+## Start the Development Server
 
 php artisan serve
+
+## or composer run dev for all start
+
+composer run dev

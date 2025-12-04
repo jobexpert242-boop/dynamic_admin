@@ -55,7 +55,7 @@ class SiteSettingController extends Controller
             'favaicon' => 'nullable|image|mimes:jpeg,png,jpg,ico,svg|max:1024',
         ]);
 
-        $site = SiteSetting::firstOrFail();
+        $site = SiteSetting::first() ?? new SiteSetting();
 
         if ($request->hasFile('logo')) {
             if ($site->logo && Storage::disk('public')->exists($site->logo)) {

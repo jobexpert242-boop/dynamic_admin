@@ -166,6 +166,23 @@ class MenusTableSeeder extends Seeder
                 'created_at' => '2025-11-18 05:34:38',
                 'updated_at' => '2025-11-18 05:34:38',
             ],
+            [
+                'id' => 11,
+                'title' => 'Billing',
+                'parent_id' => 1,
+                'route' => 'admin/billing',
+                'permission_class' => '["billing.create","billing.delete","billing.edit","billing.show"]',
+                'status' => 1,
+                'icon' => 'fas fa-file-invoice-dollar',
+                'options' => null,
+                'admin_left_section' => 0,
+                'top' => 0,
+                'left' => 1,
+                'footer' => 0,
+                'order_by' => 17,
+                'created_at' => '2025-11-18 05:34:38',
+                'updated_at' => '2025-11-18 05:34:38',
+            ],
         ]);
     }
 }

@@ -5,6 +5,9 @@ use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Admin\CacheController;
+use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -80,6 +83,11 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(funct
         // Site Setting
         Route::get('/sitesettings', [SiteSettingController::class, 'siteSetting'])->name('admin.sitesetting');
         Route::post('/sitesetting/update', [SiteSettingController::class, 'siteSettingUpdate'])->name('admin.sitesetting.update');
+
+        // billing 
+        Route::get('/billing',[BillingController::class,'billing'])->name('admin.billing');
+        Route::get('/create-invoice',[BillingController::class,'createInvoice'])->name('admin.createInvoice');
+        Route::post('/store-invoice',[BillingController::class,'storeInvoice'])->name('admin.invoice.store');
     });
 });
 
@@ -91,9 +99,7 @@ Route::get('/admin/notifications', [AdminController::class, 'notifications'])->n
 //     return 'Notification sent';
 // })->middleware('auth');
 
-// grapes js editor
-Route::get('/{slug}', [PageController::class, 'show'])->name('pages.show');
-
+// grapes js editor route 
 Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->prefix('admin')->group(function () {
     Route::get('/grapesjs', [PageController::class, 'grapesjs'])->name('pages.grapesjs');
     Route::get('/editor', [PageController::class, 'home'])->name('pages.editor');
@@ -108,3 +114,13 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->prefix('adm
     Route::post('/upload-image', [PageController::class, 'uploadImage'])->name('pages.uploadImage');
     Route::delete('/destroy/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
 });
+
+// External route link
+// grapes js editor
+Route::get('/{slug}', [PageController::class, 'show'])->name('pages.show');
+
+// multi language route
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
+
+// cache clear 
+Route::post('/clear-cache', [CacheController::class, 'clear'])->name('clear-cache');

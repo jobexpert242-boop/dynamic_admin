@@ -103,7 +103,7 @@ th,
 td {
     @apply border border-gray-300;
 }.search_css{
-    @apply block w-full pl-10 pr-4 py-2 text-sm text-gray-900 bg-gradient-to-r from-white via-gray-50 to-gray-100 border border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out hover:shadow-lg hover:border-gray-400;
+    @apply block w-full pl-10 pr-4 py-2 text-sm text-gray-900 bg-linear-to-r from-white via-gray-50 to-gray-100 border border-gray-300 rounded-md shadow-md focus:outline-0 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition duration-300 ease-in-out hover:shadow-lg hover:border-gray-400;
 }
 
 /* dark style start  */

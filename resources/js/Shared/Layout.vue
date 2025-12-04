@@ -112,13 +112,6 @@ const filteredMenus = computed(() => {
                         style="display: flex; justify-content: center"
                     ></i>
                 </span>
-                <!-- <RecursiveMenu
-                    v-for="menu in menus.left"
-                    :key="menu.id"
-                    :menu="menu"
-                    direction="vertical"
-                    :collapsed="collapsed"
-                /> -->
                 <RecursiveMenu
                     v-for="menu in filteredMenus"
                     :key="menu.id"

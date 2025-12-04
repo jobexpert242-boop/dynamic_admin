@@ -21,7 +21,7 @@ function submit() {
     form.post(route("admin.profile.update"), {
         preserveScroll: true,
         onSuccess: () => {
-            location.reload();
+            router.reload({ only: ['auth'] })
         },
     });
 }
@@ -102,7 +102,7 @@ function submit() {
                 <div class="flex justify-end">
                     <button
                         type="submit"
-                        class="btn rounded-sm fw-normal"
+                        class="btn rounded-sm fw-normal flex justify-center items-center gap-4"
                         :class="{ 'btn-spinner': form.processing }"
                         :disabled="form.processing"
                     >

@@ -117,7 +117,7 @@ function highlight(text) {
                                     <select
                                         v-model="selectedRole"
                                         @change="fetchRoles"
-                                        class="border rounded px-4 py-2"
+                                        class="border border-gray-300 rounded px-4 py-2 shadow-md focus:outline-0 focus:border-gray-300"
                                     >
                                         <option value="">All Roles</option>
                                         <option
@@ -220,7 +220,7 @@ function highlight(text) {
 
                         <button
                             type="submit"
-                            class="btn-success"
+                            class="btn-success flex justify-center items-center gap-4"
                             :class="{ 'btn-spinner': form.processing }"
                             :disabled="form.processing"
                         >

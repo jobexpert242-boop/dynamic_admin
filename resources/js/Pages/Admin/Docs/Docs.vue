@@ -68,7 +68,7 @@ function submit() {
                     >
                         <button
                             type="submit"
-                            class="btn rounded-sm fw-normal"
+                            class="btn rounded-sm fw-normal flex justify-center items-center gap-4"
                             :class="{ 'btn-spinner': form.processing }"
                             :disabled="form.processing"
                         >

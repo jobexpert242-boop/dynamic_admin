@@ -1,5 +1,5 @@
 <script setup>
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, router, useForm } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import Breadcrumb from "@/Shared/Breadcrumb.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
@@ -15,7 +15,7 @@ function submit() {
     form.post(route("admin.sitesetting.update"), {
         preserveScroll: true,
         onSuccess: () => {
-            location.reload();
+            router.reload({ only: ['site'] })
         },
     });
 }
@@ -73,7 +73,7 @@ function submit() {
                     >
                         <button
                             type="submit"
-                            class="btn rounded-sm fw-normal"
+                            class="btn rounded-sm fw-normal flex justify-center items-center gap-4"
                             :class="{ 'btn-spinner': form.processing }"
                             :disabled="form.processing"
                         >

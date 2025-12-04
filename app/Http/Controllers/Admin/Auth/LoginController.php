@@ -58,7 +58,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'error' => 'The provided credentials do not match our records.',
+            'login' => 'The provided credentials do not match our records.',
         ]);
     }
 

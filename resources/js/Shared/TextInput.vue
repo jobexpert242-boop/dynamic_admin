@@ -35,7 +35,7 @@ function onInput(event) {
                 :placeholder="placeholder"
                 :value="modelValue"
                 @input="onInput"
-                class="form-input font-robo pr-10"
+                class="w-full py-2 px-3 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500 text-gray-700 font-robo transition duration-200 form-input"
                 v-bind="$attrs"
                 :class="{ error: error }"
             />

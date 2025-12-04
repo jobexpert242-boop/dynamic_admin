@@ -39,12 +39,14 @@ function submit() {
             onSuccess: () => {
                 editing.value = null;
                 form.reset();
+                router.reload({ only: ['menus'] });
             },
         });
     } else {
         form.post("/admin/menus", {
             onSuccess: () => {
-                form.reset(), location.reload();
+                form.reset();
+                router.reload({ only: ['menus'] });
             },
         });
     }
@@ -340,7 +342,7 @@ function highlight(text) {
 
                         <button
                             type="submit"
-                            class="btn-success"
+                            class="btn-success flex justify-center items-center gap-4"
                             :class="{ 'btn-spinner': form.processing }"
                             :disabled="form.processing"
                         >

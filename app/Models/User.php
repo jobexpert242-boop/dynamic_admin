@@ -47,4 +47,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Menu::class);
     }
+
+    public function billings()
+    {
+        return $this->hasMany(Billing::class, 'customer_id');
+    }
 }

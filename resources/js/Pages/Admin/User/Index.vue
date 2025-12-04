@@ -303,7 +303,7 @@ function highlight(text) {
                         <div class="flex gap-2 justify-end border-t pt-5">
                             <button
                                 type="submit"
-                                class="btn rounded-sm fw-normal"
+                                class="btn rounded-sm fw-normal flex justify-center items-center gap-4"
                                 :class="{ 'btn-spinner': form.processing }"
                                 :disabled="form.processing"
                             >

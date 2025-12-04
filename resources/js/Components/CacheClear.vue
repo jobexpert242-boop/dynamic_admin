@@ -11,7 +11,7 @@ function clearCache() {
 <template>
     <div class="pt-3 border-t">
         <button
-            class="btn-success"
+            class="btn-success flex justify-center items-center gap-4"
             :class="{ 'btn-spinner': form.processing }"
             :disabled="form.processing"
             @click="clearCache"

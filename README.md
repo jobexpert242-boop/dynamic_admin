@@ -1,4 +1,4 @@
-b# Laravel + Vue + Inertia Project Setup
+# Laravel + Vue + Inertia Project Setup
 
 This guide walks you through installing and running a Laravel project with Vue.js and Inertia.js.  
 Follow the steps carefully to get your environment up and running.

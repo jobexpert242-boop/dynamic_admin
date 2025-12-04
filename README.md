@@ -1,4 +1,4 @@
-bbb# Laravel + Vue + Inertia Project Setup
+b# Laravel + Vue + Inertia Project Setup
 
 This guide walks you through installing and running a Laravel project with Vue.js and Inertia.js.  
 Follow the steps carefully to get your environment up and running.
@@ -53,13 +53,13 @@ php artisan storage:link
 
 ## and Add your larave pusher app id and key 
 
-PUSHER_APP_ID=your app id
-PUSHER_APP_KEY=your app key
-PUSHER_APP_SECRET=your secret key
-PUSHER_APP_CLUSTER=mt1
+PUSHER_APP_ID=your app id </br>
+PUSHER_APP_KEY=your app key </br>
+PUSHER_APP_SECRET=your secret key </br>
+PUSHER_APP_CLUSTER=mt1 </br> </br>
 
-VITE_PUSHER_APP_KEY=your app key
-VITE_PUSHER_APP_CLUSTER=mt1
+VITE_PUSHER_APP_KEY=your app key </br>
+VITE_PUSHER_APP_CLUSTER=mt1 </br>
 
 -------
 

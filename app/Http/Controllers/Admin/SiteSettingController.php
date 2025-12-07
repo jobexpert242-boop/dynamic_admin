@@ -53,6 +53,9 @@ class SiteSettingController extends Controller
         $request->validate([
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'favaicon' => 'nullable|image|mimes:jpeg,png,jpg,ico,svg|max:1024',
+            'inv_termes' => 'nullable',
+            'tax' => 'nullable',
+            'inv_prefix' => 'nullable',
         ]);
 
         $site = SiteSetting::first() ?? new SiteSetting();
@@ -72,6 +75,10 @@ class SiteSettingController extends Controller
 
             $site->favaicon = $request->file('favaicon')->store('site/favaicon', 'public');
         }
+
+        $site->inv_termes = $request->inv_termes;
+        $site->tax = $request->tax;
+        $site->inv_prefix = $request->inv_prefix;
 
         $site->save();
 

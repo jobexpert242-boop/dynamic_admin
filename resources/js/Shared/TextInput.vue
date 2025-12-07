@@ -65,7 +65,9 @@ function onInput(event) {
     </div>
 </template>
 <style>
-/* <TextInput
+/* 
+import TextInput from "@/Shared/TextInput.vue";
+<TextInput
     id="email"
     label="Email"
     type="email"

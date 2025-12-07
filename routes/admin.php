@@ -85,14 +85,21 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(funct
         Route::post('/sitesetting/update', [SiteSettingController::class, 'siteSettingUpdate'])->name('admin.sitesetting.update');
 
         // billing 
-        Route::get('/billing',[BillingController::class,'billing'])->name('admin.billing');
-        Route::get('/create-invoice',[BillingController::class,'createInvoice'])->name('admin.createInvoice');
-        Route::post('/store-invoice',[BillingController::class,'storeInvoice'])->name('admin.invoice.store');
+        Route::get('/billing', [BillingController::class, 'billing'])->name('admin.billing');
+        Route::get('/create-invoice', [BillingController::class, 'createInvoice'])->name('admin.createInvoice');
+        Route::post('/store-invoice', [BillingController::class, 'storeInvoice'])->name('admin.invoice.store');
+        Route::get('/edit-invoice/{invoice}', [BillingController::class, 'editInvoice'])->name('admin.invoice.edit');
+        Route::put('/update-invoice/{invoice}', [BillingController::class, 'updateInvoice'])->name('admin.invoice.update');
+        Route::delete('/invoice/{id}', [BillingController::class, 'deleteInvoice'])->name('admin.invoice.delete');
+        Route::get('/invoice/{invoice}/view', [BillingController::class, 'viewInvoice'])->name('admin.invoice.view');
     });
 });
 
 // notifications 
 Route::get('/admin/notifications', [AdminController::class, 'notifications'])->name('notifications.index');
+
+// public billing 
+Route::get('/invoice/{invoice}/{token}', [BillingController::class, 'publicInvoice'])->name('public.invoice');
 
 // Route::get('/test-notify', function () {
 //     auth()->user()->notify(new \App\Notifications\NewMessageNotification());

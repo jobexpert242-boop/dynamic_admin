@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('invoice')->nullable()->unique();
             $table->date('invoice_date');
-            $table->decimal('sale_tax', 8, 2)->default(0.00);
             $table->decimal('total', 12, 2);
             $table->decimal('discount', 8, 2)->default(0.00);
             $table->string('discount_type', 250)->nullable();

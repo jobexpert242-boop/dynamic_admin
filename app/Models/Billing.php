@@ -13,11 +13,6 @@ class Billing extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function billingItems()
-    {
-        return $this->hasMany(BillingItem::class, 'invoice_id');
-    }
-
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'invoice_id', 'id');

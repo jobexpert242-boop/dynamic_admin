@@ -83,3 +83,6 @@ php artisan serve
 ## or composer run dev for all start
 
 composer run dev
+
+## Admin login 
+/username Admin /Password Pa$$w0rd!

@@ -2,7 +2,7 @@
 import { usePage, Link } from "@inertiajs/vue3";
 import RecursiveMenu from "@/Shared/RecursiveMenu.vue";
 import { route } from "ziggy-js";
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import Header from "../Components/Header.vue";
 import Language from "../Components/Language.vue";
 import Notification from "../Components/Notification.vue";
@@ -21,6 +21,7 @@ const menus = props.menus || page.props.menus || {};
 const currentYear = new Date().getFullYear();
 const collapsed = ref(false);
 const searchTerm = ref("");
+const animatedPlaceholder = ref("");
 
 function filterRecursive(menusArray, term) {
     return menusArray
@@ -46,6 +47,33 @@ const filteredMenus = computed(() => {
         return menus.left;
     }
     return filterRecursive(menus.left, searchTerm.value);
+});
+
+const placeholderText = "Search Menu...";
+let intervalId;
+onMounted(() => {
+    let i = 0;
+    let typingForward = true;
+
+    intervalId = setInterval(() => {
+        if (typingForward) {
+            animatedPlaceholder.value = placeholderText.slice(0, i + 1);
+            i++;
+            if (i === placeholderText.length) {
+                typingForward = false;
+            }
+        } else {
+            animatedPlaceholder.value = placeholderText.slice(0, i);
+            i--;
+            if (i === 0) {
+                typingForward = true;
+            }
+        }
+    }, 200);
+});
+
+onUnmounted(() => {
+    clearInterval(intervalId);
 });
 </script>
 
@@ -98,7 +126,7 @@ const filteredMenus = computed(() => {
                     <input
                         type="search"
                         v-model="searchTerm"
-                        placeholder="Search Menu"
+                        :placeholder="animatedPlaceholder"
                         class="search_css"
                     />
                 </div>

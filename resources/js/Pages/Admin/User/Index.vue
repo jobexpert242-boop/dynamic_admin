@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, Head, router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import TextInput from "@/Shared/TextInput.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
 import Layout from "@/Shared/Layout.vue";
@@ -66,6 +66,7 @@ function deleteUser(user) {
     }
 }
 
+// search start
 function fetchUsers() {
     router.get(
         "/admin/users",
@@ -87,6 +88,37 @@ function highlight(text) {
 
     return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
+
+// type start
+const animatedPlaceholder = ref("");
+
+const placeholderText = "Search Users...";
+let intervalId;
+
+onMounted(() => {
+    let i = 0;
+    let typingForward = true;
+
+    intervalId = setInterval(() => {
+        if (typingForward) {
+            animatedPlaceholder.value = placeholderText.slice(0, i + 1);
+            i++;
+            if (i === placeholderText.length) {
+                typingForward = false;
+            }
+        } else {
+            animatedPlaceholder.value = placeholderText.slice(0, i);
+            i--;
+            if (i === 0) {
+                typingForward = true;
+            }
+        }
+    }, 200);
+});
+
+onUnmounted(() => {
+    clearInterval(intervalId);
+});
 </script>
 
 <template>
@@ -99,16 +131,16 @@ function highlight(text) {
         />
         <Layout>
             <Breadcrumb />
-            <div class="flex justify-between gap-3 font-robo">
+            <div class="flex justify-between gap-3 font-robo border border-gray-300 p-3 shadow-sm rounded">
                 <div
                     class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300"
                 >
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold w-1/3">All Users</h2>
+                        <h2 class="text-lg font-bold w-1/3"><i class="fa-solid fa-list"></i> All Users</h2>
                         <div class="w-2/3">
                             <SearchFilter
                                 v-model="search"
-                                placeholder="Search Users..."
+                                :placeholder="animatedPlaceholder"
                                 @search="fetchUsers"
                                 @reset="resetSearch"
                             />
@@ -201,7 +233,8 @@ function highlight(text) {
                     class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300"
                 >
                     <h2 class="text-lg font-bold mb-4">
-                        {{ selectedUser ? "Edit User" : "Add User" }}
+                    <i :class="selectedUser ? 'fa fa-pencil' : 'fa fa-plus'"></i>
+                        {{ selectedUser ? 'Edit' : 'Create' }} User
                     </h2>
                     <form @submit.prevent="submit" class="space-y-4">
                         <div class="mb-4">

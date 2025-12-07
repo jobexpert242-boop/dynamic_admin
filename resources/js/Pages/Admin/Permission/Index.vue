@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, Head, router, usePage } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import TextInput from "@/Shared/TextInput.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
 import Layout from "@/Shared/Layout.vue";
@@ -71,6 +71,37 @@ function highlight(text) {
     return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
 // search end
+
+// search type
+const animatedPlaceholder = ref("");
+
+const placeholderText = "Search Permissions...";
+let intervalId;
+
+onMounted(() => {
+    let i = 0;
+    let typingForward = true;
+
+    intervalId = setInterval(() => {
+        if (typingForward) {
+            animatedPlaceholder.value = placeholderText.slice(0, i + 1);
+            i++;
+            if (i === placeholderText.length) {
+                typingForward = false;
+            }
+        } else {
+            animatedPlaceholder.value = placeholderText.slice(0, i);
+            i--;
+            if (i === 0) {
+                typingForward = true;
+            }
+        }
+    }, 200);
+});
+
+onUnmounted(() => {
+    clearInterval(intervalId);
+});
 </script>
 
 <template>
@@ -83,19 +114,19 @@ function highlight(text) {
         />
         <Layout>
             <Breadcrumb />
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-300 p-3 shadow-sm rounded">
                 <!-- Permission List -->
                 <div
                     class="bg-white shadow rounded p-6 h-fit border border-gray-300"
                 >
                     <div class="flex justify-between">
                         <h2 class="text-lg font-semibold mb-4 w-1/2">
-                            All Permissions
+                           <i class="fa-solid fa-list"></i> All Permissions
                         </h2>
                         <div class="w-1/2">
                             <SearchFilter
                                 v-model="search"
-                                placeholder="Search permissions…"
+                                :placeholder="animatedPlaceholder"
                                 @search="fetchUsers"
                                 @reset="resetSearch"
                             />
@@ -149,7 +180,8 @@ function highlight(text) {
                     class="bg-white shadow rounded p-6 h-fit border border-gray-300"
                 >
                     <h2 class="text-lg font-semibold mb-4">
-                        {{ editing ? "Edit Permission" : "Create Permission" }}
+                    <i :class="editing ? 'fa fa-pencil' : 'fa fa-plus'"></i>
+                        {{ editing ? 'Edit' : 'Create' }} Permission
                     </h2>
                     <form @submit.prevent="submit" class="space-y-4">
                         <TextInput

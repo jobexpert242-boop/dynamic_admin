@@ -6,7 +6,7 @@ import Layout from "@/Shared/Layout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import SearchFilter from "@/Shared/SearchFilter.vue";
 import { route } from "ziggy-js";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const props = defineProps({
     pages: Object,
@@ -23,6 +23,7 @@ function deletePage(page) {
     }
 }
 
+// search start
 function fetchPages() {
     router.get(
         route("pages.grapesjs"),
@@ -53,6 +54,34 @@ function highlight(text) {
     const regex = new RegExp(`(${escapedKeyword})`, "gi");
     return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
+
+const animatedPlaceholder = ref("");
+const placeholderText = "Search Pages...";
+let intervalId;
+onMounted(() => {
+    let i = 0;
+    let typingForward = true;
+
+    intervalId = setInterval(() => {
+        if (typingForward) {
+            animatedPlaceholder.value = placeholderText.slice(0, i + 1);
+            i++;
+            if (i === placeholderText.length) {
+                typingForward = false;
+            }
+        } else {
+            animatedPlaceholder.value = placeholderText.slice(0, i);
+            i--;
+            if (i === 0) {
+                typingForward = true;
+            }
+        }
+    }, 200);
+});
+
+onUnmounted(() => {
+    clearInterval(intervalId);
+});
 </script>
 
 <template>
@@ -71,21 +100,23 @@ function highlight(text) {
             >
                 <div class="flex justify-between items-center mb-4">
                     <div class="w-1/3">
-                        <h2 class="text-lg font-bold">All Pages</h2>
+                        <h2 class="text-lg font-bold"><i class="fa-solid fa-list"></i> All Pages</h2>
                     </div>
 
                     <div class="w-1/3">
                         <SearchFilter
                             v-model="search"
-                            placeholder="Search pages..."
+                            :placeholder="animatedPlaceholder"
                             @search="fetchPages"
                             @reset="resetSearch"
                         />
                     </div>
 
                     <div class="w-1/3 flex justify-end">
-                        <Link :href="route('pages.editor')" class="btn rounded-sm fw-normal"
-                            >Add New Page</Link
+                        <Link
+                            :href="route('pages.editor')"
+                            class="btn rounded-sm fw-normal"
+                            ><i class="fa fa-plus"></i> Add New Page</Link
                         >
                     </div>
                 </div>
@@ -116,8 +147,8 @@ function highlight(text) {
                                     :href="`/${page.slug}`"
                                     target="_blank"
                                     class="text-gray-500 hover:underline"
-                                    ><i class="fa fa-eye"></i></Link
-                                >
+                                    ><i class="fa fa-eye"></i
+                                ></Link>
                                 <Link
                                     :href="route('pages.edit', page.id)"
                                     class="text-blue-600 mx-4 hover:underline"

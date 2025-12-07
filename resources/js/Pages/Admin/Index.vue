@@ -33,12 +33,15 @@ const t = (key) => page.props.translations.messages[key] ?? key;
         <Layout>
             <Breadcrumb />
 
-            <h1 class="text-2xl text-black">{{ t("welcome") }} sojib middle</h1>
-            <p class="text-lg text-red-500">Sojib</p>
-            <span class="text-gray-100">sojkibbbb</span>
+            <div class="border border-gray-300 p-3 shadow-sm rounded">
+                <h1 class="text-2xl text-black">
+                    {{ t("welcome") }} sojib middle
+                </h1>
+                <p class="text-lg text-red-500">Sojib</p>
+                <span class="text-gray-100">sojkibbbb</span>
 
-            <img :src="$page.props.auth.avatar" alt="Avatar" />
-
+                <img :src="$page.props.auth.avatar" alt="Avatar" />
+            </div>
         </Layout>
     </div>
 </template>

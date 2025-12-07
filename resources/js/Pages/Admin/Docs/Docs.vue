@@ -33,53 +33,49 @@ function submit() {
             type="success"
         />
 
-        <div class="flex gap-6 mt-6">
-            <!-- LEFT -->
-            <div
-                class="w-1/2 border border-slate-300 p-6 rounded shadow bg-white h-fit"
-            >
-                <h2 class="text-lg font-semibold mb-2">Current Docs</h2>
-
-                <div
-                    v-if="$page.props.site?.docs"
-                    v-html="$page.props.site.docs"
-                    class="prose max-w-none"
-                />
-
-                <p v-else class="text-gray-600">No documentation available.</p>
-            </div>
-
-            <!-- RIGHT -->
-            <div
-                class="w-1/2 bg-white p-6 rounded shadow border border-slate-300 h-fit"
-            >
-                <h2 class="text-lg font-semibold mb-2">Edit Docs</h2>
-
-                <form @submit.prevent="submit" class="space-y-4">
-                    <RichTextEditor
-                        v-model="form.docs"
-                        label="Documentation"
-                        placeholder="Write your documentation..."
-                        :error="form.errors.docs"
-                    />
-
-                    <div
-                        class="border-t border-slate-400 w-full flex justify-end pt-5"
-                    >
-                        <button
-                            type="submit"
-                            class="btn rounded-sm fw-normal flex justify-center items-center gap-4"
-                            :class="{ 'btn-spinner': form.processing }"
-                            :disabled="form.processing"
-                        >
-                            <span>{{
-                                form.processing ? "Processing Documentation..." : "Update Documentation"
-                            }}</span>
-                            <span v-if="form.processing" class="spinner"></span>
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <div class="mt-6 border border-gray-300 p-3 rounded shadow-sm">
+        <div class="border-b border-b-gray-300 pb-2">
+            <h2 class="text-xl"><i class="fa-regular fa-hand-point-right"></i> All Admin Uses Documentation.</h2>
         </div>
+        
+            <div class="flex gap-6 mt-3">
+                <!-- LEFT -->
+                <div class="w-1/2 border border-slate-300 p-6 rounded shadow bg-white h-fit">
+                    <h2 class="text-lg font-semibold mb-2">Current Docs</h2>
+                    <div
+                        v-if="$page.props.site?.docs"
+                        v-html="$page.props.site.docs"
+                        class="prose max-w-none"
+                    />
+                    <p v-else class="text-gray-600">No documentation available.</p>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="w-1/2 bg-white p-6 rounded shadow border border-slate-300 h-fit">
+                    <h2 class="text-lg font-semibold mb-2">Edit Docs</h2>
+                    <form @submit.prevent="submit" class="space-y-4">
+                        <RichTextEditor
+                            v-model="form.docs"
+                            label="Documentation"
+                            placeholder="Write your documentation..."
+                            :error="form.errors.docs"
+                        />
+                        <div class="border-t border-slate-400 w-full flex justify-end pt-5">
+                            <button
+                                type="submit"
+                                class="btn rounded-sm fw-normal flex justify-center items-center gap-4"
+                                :class="{ 'btn-spinner': form.processing }"
+                                :disabled="form.processing"
+                            >
+                                <span>{{
+                                    form.processing ? "Processing Documentation..." : "Update Documentation"
+                                }}</span>
+                                <span v-if="form.processing" class="spinner"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
     </Layout>
 </template>

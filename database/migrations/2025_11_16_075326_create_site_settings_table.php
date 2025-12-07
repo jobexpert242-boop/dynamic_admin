@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('favaicon')->nullable();
             $table->text('docs')->nullable();
+            $table->text('inv_termes')->nullable();
+            $table->string('tax')->nullable();
+            $table->string('inv_prefix')->nullable();
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, Head, router, usePage } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import TextInput from "@/Shared/TextInput.vue";
 import FlashMessage from "@/Shared/FlashMessage.vue";
 import Layout from "@/Shared/Layout.vue";
@@ -85,6 +85,37 @@ function highlight(text) {
     return text.replace(regex, '<span class="bg-yellow-500">$1</span>');
 }
 // search end
+
+// search type 
+const animatedPlaceholder = ref("");
+
+const placeholderText = "Search Roles...";
+let intervalId;
+
+onMounted(() => {
+  let i = 0;
+  let typingForward = true;
+
+  intervalId = setInterval(() => {
+    if (typingForward) {
+      animatedPlaceholder.value = placeholderText.slice(0, i + 1);
+      i++;
+      if (i === placeholderText.length) {
+        typingForward = false;
+      }
+    } else {
+      animatedPlaceholder.value = placeholderText.slice(0, i);
+      i--;
+      if (i === 0) {
+        typingForward = true;
+      }
+    }
+  }, 150); // speed in ms
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
 </script>
 
 <template>
@@ -97,19 +128,19 @@ function highlight(text) {
         />
         <Layout>
             <Breadcrumb />
-            <div class="flex justify-between gap-3 font-robo">
+            <div class="flex justify-between gap-3 font-robo border border-gray-300 p-3 shadow-sm rounded">
                 <!-- Role List -->
                 <div
                     class="bg-white shadow rounded p-6 w-2/3 h-fit border border-gray-300"
                 >
                     <div class="flex justify-between">
                         <h2 class="text-lg font-semibold mb-4 w-1/3">
-                            All Roles
+                           <i class="fa-solid fa-list"></i> All Roles
                         </h2>
                         <div class="w-2/3">
                             <SearchFilter
                                 v-model="search"
-                                placeholder="Search Roles..."
+                                :placeholder="animatedPlaceholder"
                                 @search="fetchRoles"
                                 @reset="resetSearch"
                             >
@@ -186,7 +217,8 @@ function highlight(text) {
                     class="bg-white shadow rounded p-6 w-1/3 h-fit border border-gray-300"
                 >
                     <h2 class="text-lg font-semibold mb-4">
-                        {{ editing ? "Edit Role" : "Create Role" }}
+                        <i :class="editing ? 'fa fa-pencil' : 'fa fa-plus'"></i>
+                        {{ editing ? 'Edit' : 'Create' }} Role
                     </h2>
                     <form @submit.prevent="submit" class="space-y-4">
                         <TextInput

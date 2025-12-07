@@ -131,6 +131,7 @@ function removeFile() {
     border-color: #4b5563;
 }
 /*
+import FileInput from "@/Shared/FileInput.vue";
 <FileInput
   v-model="form.avatar"
   label="Profile Picture"

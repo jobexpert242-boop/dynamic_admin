@@ -19,6 +19,16 @@ return new class extends Migration
             $table->text('inv_termes')->nullable();
             $table->string('tax')->nullable();
             $table->string('inv_prefix')->nullable();
+            $table->string('company_location')->nullable();
+            $table->string('company_contact')->nullable();
+            $table->string('company_email')->nullable();
+            $table->string('company_web')->nullable();
+            $table->string('company_facebook')->nullable();
+            $table->string('company_youtube')->nullable();
+            $table->string('company_linkdin')->nullable();
+            $table->string('site_termes')->nullable();
+            $table->string('site_about')->nullable();
+            $table->enum('currency', ['BDT', 'USD'])->default('BDT');
             $table->timestamps();
         });
     }

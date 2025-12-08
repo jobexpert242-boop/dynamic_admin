@@ -92,6 +92,7 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(funct
         Route::put('/update-invoice/{invoice}', [BillingController::class, 'updateInvoice'])->name('admin.invoice.update');
         Route::delete('/invoice/{id}', [BillingController::class, 'deleteInvoice'])->name('admin.invoice.delete');
         Route::get('/invoice/{invoice}/view', [BillingController::class, 'viewInvoice'])->name('admin.invoice.view');
+        Route::put('/invoice/update/status/{invoice}', [BillingController::class, 'invoiceUpdateStatus'])->name('invoice.update.status');
     });
 });
 

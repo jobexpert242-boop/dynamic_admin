@@ -56,6 +56,15 @@ class SiteSettingController extends Controller
             'inv_termes' => 'nullable',
             'tax' => 'nullable',
             'inv_prefix' => 'nullable',
+            'company_location' => 'nullable',
+            'company_contact' => 'nullable',
+            'company_email' => 'nullable',
+            'company_web' => 'nullable',
+            'company_facebook' => 'nullable',
+            'company_youtube' => 'nullable',
+            'company_linkdin' => 'nullable',
+            'site_termes' => 'nullable',
+            'site_about' => 'nullable',
         ]);
 
         $site = SiteSetting::first() ?? new SiteSetting();
@@ -79,6 +88,16 @@ class SiteSettingController extends Controller
         $site->inv_termes = $request->inv_termes;
         $site->tax = $request->tax;
         $site->inv_prefix = $request->inv_prefix;
+        $site->company_location = $request->company_location;
+        $site->company_contact = $request->company_contact;
+        $site->company_email = $request->company_email;
+        $site->company_web = $request->company_web;
+        $site->company_facebook = $request->company_facebook;
+        $site->company_youtube = $request->company_youtube;
+        $site->company_linkdin = $request->company_linkdin;
+        $site->site_termes = $request->site_termes;
+        $site->site_about = $request->site_about;
+        $site->currency = $request->currency;
 
         $site->save();
 

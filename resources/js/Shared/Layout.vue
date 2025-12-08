@@ -75,6 +75,12 @@ onMounted(() => {
 onUnmounted(() => {
     clearInterval(intervalId);
 });
+
+const public_url = "https://comitsbd.com/";
+function newTab(e) {
+    e.preventDefault();
+    window.open(public_url, "_blank");
+}
 </script>
 
 <template>
@@ -167,11 +173,13 @@ onUnmounted(() => {
             />
             <p>
                 All Rights Reserved
-                <Link
-                    href="https://comitsbd.com/"
+                <button
+                    type="button"
+                    @click="newTab"
                     class="text-indigo-600 hover:underline"
-                    >ComitsBD</Link
                 >
+                    ComitsBD
+                </button>
                 | {{ currentYear }}
             </p>
         </footer>

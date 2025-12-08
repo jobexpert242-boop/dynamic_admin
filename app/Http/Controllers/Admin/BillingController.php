@@ -124,7 +124,12 @@ class BillingController extends Controller
             ]);
         }
 
-        return back()->with('status', 'Billing created successfully.');
+        if ($request->action === 'save_close') {
+            return redirect()->route('admin.invoice.view', $billing->invoice)
+                ->with('status', 'Invoice created successfully.');
+        }
+
+        return back()->with('status', 'Invoice created successfully.');
     }
 
     // Edit Invoice
@@ -203,7 +208,12 @@ class BillingController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.billing')->with('status', 'Invoice updated successfully.');
+        if ($request->action === 'save_close') {
+            return redirect()->route('admin.invoice.view', $billing->invoice)
+                ->with('status', 'Invoice updated successfully.');
+        }
+
+        return back()->with('status', 'Invoice updated successfully.');
     }
 
     // delete invoice
@@ -242,5 +252,15 @@ class BillingController extends Controller
         return Inertia::render("Admin/Billing/PublicView", [
             'invoice' => $billing
         ]);
+    }
+
+    // invoice update status 
+    public function invoiceUpdateStatus(Request $request, $invoice)
+    {
+        $billing = Billing::where('invoice', $invoice)->firstOrFail();
+        $billing->status = $request->status;
+        $billing->save();
+
+        return redirect()->back()->with('status', 'Status updated successfully!');
     }
 }

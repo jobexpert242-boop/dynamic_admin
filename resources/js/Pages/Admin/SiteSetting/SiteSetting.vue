@@ -7,6 +7,7 @@ import Layout from "@/Shared/Layout.vue";
 import FileInput from "@/Shared/FileInput.vue";
 import TextInput from "@/Shared/TextInput.vue";
 import RichTextEditor from "@/Shared/RichTextEditor.vue";
+import SelectInput from "@/Shared/SelectInput.vue";
 
 const page = usePage();
 const form = useForm({
@@ -15,6 +16,16 @@ const form = useForm({
     tax: page.props.site?.tax || "",
     inv_prefix: page.props.site?.inv_prefix || "",
     inv_termes: page.props.site?.inv_termes || "",
+    company_location: page.props.site?.company_location || "",
+    company_contact: page.props.site?.company_contact || "",
+    company_email: page.props.site?.company_email || "",
+    company_web: page.props.site?.company_web || "",
+    company_facebook: page.props.site?.company_facebook || "",
+    company_youtube: page.props.site?.company_youtube || "",
+    company_linkdin: page.props.site?.company_linkdin || "",
+    site_termes: page.props.site?.site_termes || "",
+    site_about: page.props.site?.site_about || "",
+    currency: page.props.site?.currency || "",
 });
 
 function submit() {
@@ -25,6 +36,10 @@ function submit() {
         },
     });
 }
+const currency = [
+    { value: "BDT", label: "BDT" },
+    { value: "USD", label: "USD" },
+];
 </script>
 
 <template>
@@ -39,7 +54,10 @@ function submit() {
             <Breadcrumb />
             <div class="p-5 shadow border border-gray-300 rounded">
                 <div class="border-b border-b-gray-300 pb-2">
-                    <h2 class="text-xl"><i class="fa-regular fa-hand-point-right"></i> Site Related all Important Text.</h2>
+                    <h2 class="text-xl">
+                        <i class="fa-regular fa-hand-point-right"></i> Site
+                        Related all Important Text.
+                    </h2>
                 </div>
 
                 <div class="mt-3">
@@ -48,69 +66,230 @@ function submit() {
                         enctype="multipart/form-data"
                         class="space-y-4"
                     >
-                        <div class="flex gap-5">
-                            <div class="flex flex-wrap gap-5 h-fit w-2/3">
-                                <div class="h-fit">
-                                    <FileInput
-                                        v-model="form.logo"
-                                        label="Site Logo"
-                                        accept="image/*"
-                                        :multiple="false"
-                                        :error="form.errors.logo"
-                                    />
-                                    <img
-                                        :src="`/storage/${$page.props.site?.logo}`"
-                                        class="w-20 h-20 mt-2 border border-slate-300"
-                                        alt=""
-                                    />
+                        <div class="flex gap-3">
+                            <div class="h-fit w-1/2">
+                                <div class="flex gap-3 mb-3">
+                                    <div class="h-fit w-1/2">
+                                        <FileInput
+                                            v-model="form.logo"
+                                            label="Site Logo"
+                                            accept="image/*"
+                                            :multiple="false"
+                                            :error="form.errors.logo"
+                                        />
+                                        <img
+                                            :src="`/storage/${$page.props.site?.logo}`"
+                                            class="w-20 h-20 mt-2 border border-slate-300"
+                                            alt=""
+                                        />
+                                    </div>
+
+                                    <div class="h-fit w-1/2">
+                                        <FileInput
+                                            v-model="form.favaicon"
+                                            label="Site Favaicon"
+                                            accept="image/*"
+                                            :multiple="false"
+                                            :error="form.errors.favaicon"
+                                        />
+                                        <img
+                                            :src="`/storage/${$page.props.site?.favaicon}`"
+                                            class="w-20 h-20 mt-2 border border-slate-300"
+                                            alt=""
+                                        />
+                                    </div>
                                 </div>
 
-                                <div class="h-fit">
-                                    <FileInput
-                                        v-model="form.favaicon"
-                                        label="Site Favaicon"
-                                        accept="image/*"
-                                        :multiple="false"
-                                        :error="form.errors.favaicon"
-                                    />
-                                    <img
-                                        :src="`/storage/${$page.props.site?.favaicon}`"
-                                        class="w-20 h-20 mt-2 border border-slate-300"
-                                        alt=""
-                                    />
-                                </div>
+                                <div
+                                    class="flex flex-wrap justify-between gap-5"
+                                >
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="tax"
+                                            label="Tax"
+                                            type="text"
+                                            v-model="form.tax"
+                                            :error="form.errors.tax"
+                                            placeholder="Tax"
+                                            @input="form.errors.tax = null"
+                                        />
+                                    </div>
 
-                                <div class="h-fit">
-                                    <TextInput
-                                        id="tax"
-                                        label="Tax"
-                                        type="text"
-                                        v-model="form.tax"
-                                        :error="form.errors.tax"
-                                        placeholder="Tax"
-                                        @input="form.errors.tax = null"
-                                    />
-                                </div>
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="inv_prefix"
+                                            label="Invoice Prefix"
+                                            type="text"
+                                            v-model="form.inv_prefix"
+                                            :error="form.errors.inv_prefix"
+                                            placeholder="Invoice Prefix"
+                                            @input="
+                                                form.errors.inv_prefix = null
+                                            "
+                                        />
+                                    </div>
 
-                                <div class="h-fit">
-                                    <TextInput
-                                        id="inv_prefix"
-                                        label="Invoice Prefix"
-                                        type="text"
-                                        v-model="form.inv_prefix"
-                                        :error="form.errors.inv_prefix"
-                                        placeholder="Invoice Prefix"
-                                        @input="form.errors.inv_prefix = null"
-                                    />
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_location"
+                                            label="Company Location"
+                                            type="text"
+                                            v-model="form.company_location"
+                                            :error="
+                                                form.errors.company_location
+                                            "
+                                            placeholder="Company Location"
+                                            @input="
+                                                form.errors.company_location =
+                                                    null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_contact"
+                                            label="Company Contact Number"
+                                            type="text"
+                                            v-model="form.company_contact"
+                                            :error="form.errors.company_contact"
+                                            placeholder="Company contact Number"
+                                            @input="
+                                                form.errors.company_contact =
+                                                    null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_email"
+                                            label="Company Email"
+                                            type="text"
+                                            v-model="form.company_email"
+                                            :error="form.errors.company_email"
+                                            placeholder="Company Email"
+                                            @input="
+                                                form.errors.company_email = null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_web"
+                                            label="Company Website"
+                                            type="text"
+                                            v-model="form.company_web"
+                                            :error="form.errors.company_web"
+                                            placeholder="Company Website"
+                                            @input="
+                                                form.errors.company_web = null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_facebook"
+                                            label="Company Facebook"
+                                            type="text"
+                                            v-model="form.company_facebook"
+                                            :error="
+                                                form.errors.company_facebook
+                                            "
+                                            placeholder="Company Facebook"
+                                            @input="
+                                                form.errors.company_facebook =
+                                                    null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_youtube"
+                                            label="Company Youtube"
+                                            type="text"
+                                            v-model="form.company_youtube"
+                                            :error="form.errors.company_youtube"
+                                            placeholder="Company Youtube"
+                                            @input="
+                                                form.errors.company_youtube =
+                                                    null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit">
+                                        <TextInput
+                                            id="company_linkdin"
+                                            label="Company Linkdin"
+                                            type="text"
+                                            v-model="form.company_linkdin"
+                                            :error="form.errors.company_linkdin"
+                                            placeholder="Company Linkdin"
+                                            @input="
+                                                form.errors.company_linkdin =
+                                                    null
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="h-fit w-50">
+                                        <SelectInput
+                                            v-model="form.currency"
+                                            :options="currency"
+                                            label="Select Currency"
+                                            placeholder="Select Currency..."
+                                            :error="form.errors.currency"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                            <div class="h-fit w-1/3">
-                                <RichTextEditor
-                                    v-model="form.inv_termes"
-                                    label="Termes & Condition"
-                                    placeholder="Termes & Condition"
-                                    :error="form.errors.inv_termes"
-                                />
+                            <div class="h-fit w-1/2">
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                        ><i
+                                            class="fa-regular fa-hand-point-right"
+                                        ></i>
+                                        Invoice Termes & Conditions</label
+                                    >
+                                    <RichTextEditor
+                                        v-model="form.inv_termes"
+                                        label="Invoice Termes & Condition"
+                                        placeholder="Termes & Condition"
+                                        :error="form.errors.inv_termes"
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                        ><i
+                                            class="fa-regular fa-hand-point-right"
+                                        ></i>
+                                        Site About Page</label
+                                    >
+                                    <RichTextEditor
+                                        v-model="form.site_about"
+                                        label="Termes & Condition"
+                                        placeholder="Termes & Condition"
+                                        :error="form.errors.site_about"
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                        ><i
+                                            class="fa-regular fa-hand-point-right"
+                                        ></i>
+                                        Site Termes & Conditions Page</label
+                                    >
+                                    <RichTextEditor
+                                        v-model="form.site_termes"
+                                        label="Termes & Condition"
+                                        placeholder="Termes & Condition"
+                                        :error="form.errors.site_termes"
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div
@@ -125,7 +304,10 @@ function submit() {
                                 <span>{{
                                     form.processing ? "Processing..." : "Update"
                                 }}</span>
-                                <span v-if="form.processing" class="spinner"></span>
+                                <span
+                                    v-if="form.processing"
+                                    class="spinner"
+                                ></span>
                             </button>
                         </div>
                     </form>

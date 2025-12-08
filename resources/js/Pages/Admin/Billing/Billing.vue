@@ -113,7 +113,9 @@ function overlayClick(e) {
 
         <div class="bg-white shadow rounded p-6 border border-gray-300">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-bold"><i class="fa-solid fa-list"></i> Billing List</h2>
+                <h2 class="text-lg font-bold">
+                    <i class="fa-solid fa-list"></i> Billing List
+                </h2>
                 <div class="flex gap-2 w-1/2">
                     <SearchFilter
                         v-model="search"
@@ -149,6 +151,7 @@ function overlayClick(e) {
                 </thead>
                 <tbody>
                     <tr
+                        v-if="invoices.data"
                         v-for="(invoice, index) in invoices.data"
                         :key="invoice.id"
                     >
@@ -200,7 +203,9 @@ function overlayClick(e) {
                                 ><i class="fa fa-eye"></i
                             ></Link>
                             <Link
-                                :href="route('admin.invoice.edit', invoice.invoice)"
+                                :href="
+                                    route('admin.invoice.edit', invoice.invoice)
+                                "
                                 class="bg-indigo-500 p-1.5 text-white rounded-sm mx-2"
                                 ><i class="fa fa-edit"></i
                             ></Link>
@@ -212,6 +217,9 @@ function overlayClick(e) {
                             </button>
                         </td>
                     </tr>
+                    <tr class="text-xl text-red-500 text-center" v-else>
+                        <td colspan="10">No Data Found</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -221,7 +229,9 @@ function overlayClick(e) {
 
     <div
         v-if="showInvoiceModal"
-        class="fixed inset-0 bg-black/50 flex justify-center items-center z-50"  id="invoice-modal-overlay" @click="overlayClick"
+        class="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
+        id="invoice-modal-overlay"
+        @click="overlayClick"
     >
         <div
             class="bg-white rounded shadow-lg w-3/4 max-h-[80vh] overflow-y-auto p-5 relative"

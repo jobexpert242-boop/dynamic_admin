@@ -43,6 +43,7 @@ const form = useForm({
             warranty_date: "",
         },
     ],
+    action: "",
 });
 
 const subTotal = computed(() => {
@@ -97,7 +98,9 @@ function removeItem(index) {
     else alert("At least one item is required.");
 }
 
-function submit() {
+// function submit() {
+function submitForm(actionType) {
+    form.action = actionType;
     form.sub_total = subTotal.value;
     form.total_discount = discountTotal.value;
     form.total_tax = taxTotal.value;
@@ -143,16 +146,19 @@ watch(
         />
 
         <div class="border border-gray-300 p-2 shadow-sm rounded">
-            <div class="flex justify-between items-center border-b border-b-gray-300 mb-4 pb-3">
-                <h2 class="text-lg font-bold"><i class="fa fa-plus"></i> Add Billing</h2>
+            <div
+                class="flex justify-between items-center border-b border-b-gray-300 mb-4 pb-3"
+            >
+                <h2 class="text-lg font-bold">
+                    <i class="fa fa-plus"></i> Add Billing
+                </h2>
                 <Link :href="route('admin.billing')" class="btn rounded-sm">
-                   <i class="fa-solid fa-list"></i> Invoice List
+                    <i class="fa-solid fa-list"></i> Invoice List
                 </Link>
             </div>
 
             <form @submit.prevent="submit" class="space-y-4">
                 <div class="flex gap-3">
-                    <!-- LEFT SIDE -->
                     <div class="w-3/4 h-fit">
                         <div class="border border-gray-300 bg-white p-3 mb-3">
                             <h3 class="font-semibold mb-2">Items</h3>
@@ -162,20 +168,25 @@ watch(
                                 :key="index"
                             >
                                 <div class="flex gap-4 mb-2">
-                                <div>
-                                <label class="form-label flex items-center">
+                                    <div>
+                                        <label
+                                            class="form-label flex items-center"
+                                        >
                                             ItemCode
-                                            <i class="fa-solid fa-circle-exclamation text-indigo-600" title="Keep it blank Insert it Nullable"></i>
+                                            <i
+                                                class="fa-solid fa-circle-exclamation text-indigo-600"
+                                                title="Keep it blank Insert it Nullable"
+                                            ></i>
                                         </label>
-                                    <TextInput
-                                        v-model="item.item_code"
-                                        :error="
-                                            form.errors[
-                                                `items.${index}.item_code`
-                                            ]
-                                        "
-                                    />
-                                </div>
+                                        <TextInput
+                                            v-model="item.item_code"
+                                            :error="
+                                                form.errors[
+                                                    `items.${index}.item_code`
+                                                ]
+                                            "
+                                        />
+                                    </div>
 
                                     <TextInput
                                         label="Item Name"
@@ -279,26 +290,45 @@ watch(
                         </div>
                     </div>
 
-                    <!-- RIGHT SIDE -->
                     <div class="w-1/4 h-fit">
                         <div
                             class="flex gap-5 justify-end p-3 border border-gray-300 bg-white"
                         >
                             <button
-                                type="submit"
+                                type="button"
+                                @click="submitForm('save')"
                                 class="btn rounded-sm flex justify-center items-center gap-3"
                                 :disabled="form.processing"
                                 :class="{ 'btn-spinner': form.processing }"
                             >
-                                <span>{{ form.processing ? "Saving..." : "Save" }}</span>
-                            <span v-if="form.processing" class="spinner"></span>
+                                <span>{{
+                                    form.processing ? "Saving..." : "Save"
+                                }}</span>
+                                <span
+                                    v-if="form.processing"
+                                    class="spinner"
+                                ></span>
                             </button>
-                            <!-- <button type="submit" class="btn rounded-sm">
-                                Save & Close
-                            </button> -->
+
+                            <button
+                                type="button"
+                                @click="submitForm('save_close')"
+                                class="btn rounded-sm flex justify-center items-center gap-3"
+                                :disabled="form.processing"
+                                :class="{ 'btn-spinner': form.processing }"
+                            >
+                                <span>{{
+                                    form.processing
+                                        ? "Save & Closing..."
+                                        : "Save & Close"
+                                }}</span>
+                                <span
+                                    v-if="form.processing"
+                                    class="spinner"
+                                ></span>
+                            </button>
                         </div>
 
-                        <!-- TOTALS -->
                         <div
                             class="p-3 border border-gray-300 bg-white mt-2 flex justify-between"
                         >
@@ -323,7 +353,6 @@ watch(
                             </div>
                         </div>
 
-                        <!-- CUSTOMER & BILLING -->
                         <div class="border border-gray-300 bg-white p-3 mt-3">
                             <div class="mb-3">
                                 <SelectInput
@@ -337,20 +366,32 @@ watch(
 
                             <div class="mb-3">
                                 <label class="form-label flex items-center">
-                                            Address
-                                            <i class="fa-solid fa-circle-exclamation text-indigo-600" title="Auto generate Address Base in User."></i>
-                                        </label>
+                                    Address
+                                    <i
+                                        class="fa-solid fa-circle-exclamation text-indigo-600"
+                                        title="Auto generate Address Base in User."
+                                    ></i>
+                                </label>
                                 <textarea
                                     v-model="form.address"
                                     class="border rounded p-2 w-full border-gray-300 focus:outline-0"
                                     readonly
                                 ></textarea>
                             </div>
-                            
+
                             <div class="mb-3">
-                            <label class="form-label">Invoice No</label>
-                            <input type="text" v-model="form.invoice" placeholder="Invoice No" class="border border-gray-300 rounded p-2 w-full focus:outline-0" readonly>
-                                <small class="text-yellow-400">Keep it Blank to Generate Invoice Number Automatically</small>
+                                <label class="form-label">Invoice No</label>
+                                <input
+                                    type="text"
+                                    v-model="form.invoice"
+                                    placeholder="Invoice No"
+                                    class="border border-gray-300 rounded p-2 w-full focus:outline-0"
+                                    readonly
+                                />
+                                <small class="text-yellow-400"
+                                    >Keep it Blank to Generate Invoice Number
+                                    Automatically</small
+                                >
                             </div>
 
                             <div class="mb-3">
@@ -399,13 +440,14 @@ watch(
                                 class="btn rounded-sm mt-3"
                                 @click="openDiscount"
                             >
-                               <i class="fa fa-plus"></i> Add Discount
+                                <i class="fa fa-plus"></i> Add Discount
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
+
         <!-- discount modal  -->
         <div
             v-if="showDiscountModal"
@@ -433,10 +475,15 @@ watch(
                 />
 
                 <div class="flex justify-end gap-3 mt-4">
-                    <button class="btn rounded-sm" @click="showDiscountModal = false">
+                    <button
+                        class="btn rounded-sm"
+                        @click="showDiscountModal = false"
+                    >
                         Cancel
                     </button>
-                    <button class="btn rounded-sm" @click="applyDiscount">Apply</button>
+                    <button class="btn rounded-sm" @click="applyDiscount">
+                        Apply
+                    </button>
                 </div>
             </div>
         </div>

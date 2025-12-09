@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DefaultMail;
 use App\Models\Billing;
 use App\Models\BillingItem;
 use App\Models\User;
 use App\Models\SiteSetting;
+use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -217,27 +221,34 @@ class BillingController extends Controller
     }
 
     // delete invoice
-    public function deleteInvoice(Billing $billing)
+    public function deleteInvoice($invoice)
     {
+        $billing = Billing::where('invoice', $invoice)->firstOrFail();
         $billing->items()->delete();
+        Transaction::where('invoice_id', $billing->invoice)->delete();
         $billing->delete();
-
         return back()->with('status', 'Billing deleted successfully.');
     }
 
-    // View Invoice (Admin Protected)
+    // View Invoice 
     public function viewInvoice($invoice)
     {
         $billing = Billing::with(['items', 'customer'])
             ->where('invoice', $invoice)
             ->firstOrFail();
+        $transactions = Transaction::where('invoice_id', $billing->invoice)
+            ->orderBy('id', 'desc')
+            ->get();
 
         // Generate public view URL
         $publicUrl = url('/invoice/' . $billing->invoice . '/' . $billing->token);
+        $publicPrint = url('/invoice/print/' . $billing->invoice . '/' . $billing->token);
 
         return Inertia::render('Admin/Billing/ViewInvoice', [
             'invoice'    => $billing,
             'public_url' => $publicUrl,
+            'transactions' => $transactions,
+            'publicPrint' => $publicPrint
         ]);
     }
 
@@ -248,11 +259,79 @@ class BillingController extends Controller
             ->where('token', $token)
             ->with('items', 'customer')
             ->firstOrFail();
+        $transactions = Transaction::where('invoice_id', $billing->invoice)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $publicUrl = url('/invoice/print/' . $billing->invoice . '/' . $billing->token);
 
         return Inertia::render("Admin/Billing/PublicView", [
-            'invoice' => $billing
+            'invoice' => $billing,
+            'transactions' => $transactions,
+            'publicUrl' => $publicUrl,
         ]);
     }
+
+    // public print 
+    public function publicInvoicePrint($invoice, $token)
+    {
+        $billing = Billing::where('invoice', $invoice)
+            ->where('token', $token)
+            ->with('items', 'customer')
+            ->firstOrFail();
+        $transactions = Transaction::where('invoice_id', $billing->invoice)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return Inertia::render('Admin/Billing/Print', [
+            'invoice' => $billing,
+            'transactions' => $transactions
+        ]);
+    }
+
+    // download pdf 
+    public function downloadInvoicePdf($invoice)
+    {
+        $billing = Billing::with(['items', 'customer'])
+            ->where('invoice', $invoice)
+            ->firstOrFail();
+
+        $transactions = Transaction::where('invoice_id', $billing->invoice)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $site = SiteSetting::first();
+
+        $pdf = Pdf::loadView('pdf.billing', [
+            'invoice'      => $billing,
+            'transactions' => $transactions,
+            'site'         => $site,
+        ])->setPaper('A4')->set_option('isRemoteEnabled', true);
+
+        return $pdf->stream('Invoice_' . $billing->invoice . '.pdf');
+    }
+
+    // download pdf 
+    public function downloadInvoicePdf2($invoice)
+    {
+        $billing = Billing::with(['items', 'customer'])
+            ->where('invoice', $invoice)
+            ->firstOrFail();
+
+        $transactions = Transaction::where('invoice_id', $billing->invoice)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $site = SiteSetting::first();
+
+        $pdf = Pdf::loadView('pdf.billing', [
+            'invoice'      => $billing,
+            'transactions' => $transactions,
+            'site'         => $site,
+        ])->setPaper('A4')->set_option('isRemoteEnabled', true);
+        return $pdf->download('Invoice_' . $billing->invoice . '.pdf');
+    }
+
 
     // invoice update status 
     public function invoiceUpdateStatus(Request $request, $invoice)
@@ -263,4 +342,55 @@ class BillingController extends Controller
 
         return redirect()->back()->with('status', 'Status updated successfully!');
     }
+
+    // store transtiction 
+    public function storePayment(Request $request)
+    {
+        $validated = $request->validate([
+            'invoice_id' => 'required|string|exists:billings,invoice',
+            'type' => 'required|in:debit,credit',
+            'category_id' => 'required|integer',
+            'payer' => 'required|string',
+            'payee' => 'required|string',
+            'amount' => 'required|numeric|min:1',
+            'note' => 'nullable|string',
+            'status' => 'required|in:success,failed',
+            'payment_method' => 'required|string',
+            'payment_info' => 'required|string',
+        ]);
+
+        $billing = Billing::where('invoice', $validated['invoice_id'])->firstOrFail();
+
+        Transaction::create([
+            'invoice_id'     => $billing->invoice,
+            'type'           => $validated['type'],
+            'category_id'    => $validated['category_id'],
+            'payer'          => $validated['payer'],
+            'payee'          => $validated['payee'],
+            'payer_id'       => auth()->id(),
+            'payee_id'       => $billing->customer_id,
+            'amount'         => $validated['amount'],
+            'note'           => $validated['note'],
+            'status'         => $validated['status'],
+            'payment_method' => $validated['payment_method'],
+            'payment_info'   => $validated['payment_info'],
+        ]);
+
+        // Update paid amount ONLY when success
+        if ($validated['status'] === 'success') {
+            $billing->paid = ($billing->paid ?? 0) + $validated['amount'];
+            $billing->save();
+        }
+
+        return back()->with('status', 'Payment added successfully.');
+    }
+
+    // public function sendTestEmail()
+    // {
+    //     $body = '<h2>Hello John Doe</h2><p>Your invoice has been generated successfully.</p>
+    //          <a href="#" class="btn">View Invoice</a>';
+
+    //     Mail::to('jobexpert242@gmail.com')->send(new DefaultMail('Invoice Generated', $body));
+    //     return 'Email Sent!';
+    // }
 }

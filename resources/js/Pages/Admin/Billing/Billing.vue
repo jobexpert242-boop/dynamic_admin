@@ -15,9 +15,9 @@ const props = defineProps({
 
 const search = ref(props.search || "");
 
-function deleteInvoice(id) {
+function deleteInvoice(invoice) {
     if (confirm("Are you sure you want to delete this invoice?")) {
-        router.delete(route("admin.invoice.delete", id));
+        router.delete(route("admin.invoice.delete", invoice));
     }
 }
 
@@ -151,7 +151,6 @@ function overlayClick(e) {
                 </thead>
                 <tbody>
                     <tr
-                        v-if="invoices.data"
                         v-for="(invoice, index) in invoices.data"
                         :key="invoice.id"
                     >
@@ -210,16 +209,19 @@ function overlayClick(e) {
                                 ><i class="fa fa-edit"></i
                             ></Link>
                             <button
-                                @click="deleteInvoice(invoice.id)"
+                                @click="deleteInvoice(invoice.invoice)"
                                 class="p-1.5 rounded-sm bg-red-500 text-white"
                             >
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
                     </tr>
-                    <tr class="text-xl text-red-500 text-center" v-else>
-                        <td colspan="10">No Data Found</td>
-                    </tr>
+
+                    <!-- <tr v-if="props.invoices.length === 0">
+                        <td colspan="11" class="py-3 text-gray-500">
+                            <p class="text-center">No Invoice found.</p>
+                        </td>
+                    </tr> -->
                 </tbody>
             </table>
 

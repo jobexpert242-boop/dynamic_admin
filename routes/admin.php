@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\CacheController;
+use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PageController;
@@ -90,9 +91,11 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(funct
         Route::post('/store-invoice', [BillingController::class, 'storeInvoice'])->name('admin.invoice.store');
         Route::get('/edit-invoice/{invoice}', [BillingController::class, 'editInvoice'])->name('admin.invoice.edit');
         Route::put('/update-invoice/{invoice}', [BillingController::class, 'updateInvoice'])->name('admin.invoice.update');
-        Route::delete('/invoice/{id}', [BillingController::class, 'deleteInvoice'])->name('admin.invoice.delete');
+        Route::delete('/invoice/{invoice}', [BillingController::class, 'deleteInvoice'])->name('admin.invoice.delete');
         Route::get('/invoice/{invoice}/view', [BillingController::class, 'viewInvoice'])->name('admin.invoice.view');
         Route::put('/invoice/update/status/{invoice}', [BillingController::class, 'invoiceUpdateStatus'])->name('invoice.update.status');
+        Route::post('/invoice/payment/store', [BillingController::class, 'storePayment'])->name('admin.invoice.payment.store');
+        Route::post('/send-invoice-email/{invoice}', [EmailController::class, 'sendInvoiceEmail'])->name('admin.invoice.sendEmail');
     });
 });
 
@@ -100,8 +103,12 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(funct
 Route::get('/admin/notifications', [AdminController::class, 'notifications'])->name('notifications.index');
 
 // public billing 
+Route::get('/invoice/{invoice}/download', [BillingController::class, 'downloadInvoicePdf'])->name('admin.invoice.download');
+Route::get('/invoice/{invoice}/download2', [BillingController::class, 'downloadInvoicePdf2'])->name('admin.invoice.download2');
 Route::get('/invoice/{invoice}/{token}', [BillingController::class, 'publicInvoice'])->name('public.invoice');
+Route::get('/invoice/print/{invoice}/{token}', [BillingController::class, 'publicInvoicePrint'])->name('public.invoice.print');
 
+// Route::get('/test-email', [BillingController::class, 'sendTestEmail']);
 // Route::get('/test-notify', function () {
 //     auth()->user()->notify(new \App\Notifications\NewMessageNotification());
 //     return 'Notification sent';

@@ -1,12 +1,9 @@
 <script setup>
-import { Head, Link } from "@inertiajs/vue3";
-import { ref } from "vue";
-import { route } from "ziggy-js";
+import { Head } from "@inertiajs/vue3";
 
 const props = defineProps({
     invoice: Object,
     transactions: Array,
-    publicUrl: String,
 });
 
 function statusColor(status) {
@@ -35,49 +32,33 @@ function formatDate(dateString) {
 function formatCurrency(value) {
     return Number(value).toFixed(2);
 }
-function newTab(e) {
-    e.preventDefault();
-    window.open(props.publicUrl, "_blank");
-}
-
-const showPaymentModal = ref(false);
-
-function openPaymentModal() {
-    showPaymentModal.value = true;
-}
-
-function closePaymentModal() {
-    showPaymentModal.value = false;
-}
-function downloadPdf() {
-    window.open(
-        route("admin.invoice.download", props.invoice.invoice),
-        "_blank"
-    );
-}
 </script>
 
 <template>
     <Head title="View Billing" />
 
     <div
-        class="border rounded border-gray-300 shadow-sm p-5 bg-white w-4xl m-auto"
+        class="border rounded border-gray-300 shadow-sm p-4 bg-white w-4xl m-auto"
     >
-        <div class="mt-5">
-            <div class="flex justify-between mb-6">
+        <div class="mt-4">
+            <div class="flex justify-between items-center mb-2 border-b border-b-gray-300 pb-2">
                 <div>
-                    <h1 class="text-xl font-bold">Invoice</h1>
-                    <h2 class="text-md mt-2 mb-5"># {{ invoice.invoice }}</h2>
-                    <span
-                        class="p-2 rounded text-white"
-                        :class="statusColor(invoice.status)"
-                    >
-                        {{ invoice.status }}
-                    </span>
+                    <div class="flex gap-3 items-center">
+                        <h2 class="text-lg font-semibold">Invoice</h2>
+                        <h1 class="text-xl font-bold">
+                            # {{ invoice.invoice }}
+                        </h1>
+                    </div>
                 </div>
                 <div class="text-end">
-                    <p class="text-md font-semibold">Company Location:</p>
-                    <address class="flex flex-col gap-2 mt-3">
+                    <div class="flex justify-end">
+                        <img
+                            src="https://support.comitsbd.com/public//images/logo_1755536796.jpg"
+                            class="h-10"
+                            alt="site logo"
+                        />
+                    </div>
+                    <address class="flex flex-col gap-1.5 mt-1">
                         <span v-if="$page.props.site?.company_location">{{
                             $page.props.site?.company_location
                         }}</span>
@@ -114,9 +95,9 @@ function downloadPdf() {
                 </div>
             </div>
 
-            <div class="flex justify-between mb-3">
+            <div class="flex justify-between items-center">
                 <div>
-                    <h2 class="font-semibold mb-2 text-sm">Invoice To.</h2>
+                    <h2 class="font-semibold mb-1.5 text-sm">Invoice To.</h2>
                     <div class="flex flex-col gap-1.5">
                         <p>
                             <strong>Name:</strong>
@@ -133,64 +114,39 @@ function downloadPdf() {
                         </p>
                     </div>
                 </div>
-                <div class="text-end flex flex-col gap-1.5">
-                    <div class="flex justify-end">
-                        <img
-                            src="https://support.comitsbd.com/public//images/logo_1755536796.jpg"
-                            class="h-10"
-                            alt="site logo"
-                        />
-                    </div>
-                    <p class="text-sm">
-                        <strong>Invoice Date : </strong>
-                        {{ formatDate(invoice.invoice_date) }}
-                    </p>
-                    <p class="text-sm">
-                        <strong>Due Date : </strong>
-                        {{ formatDate(invoice.updated_at) }}
-                    </p>
-                    <h2>
-                        <strong class="text-2xl">Invoice Total : </strong
-                        ><span class="text-lg"
-                            >{{ $page.props.site?.currency }}
-                            {{ formatCurrency(invoice.sub_total) }}</span
-                        >
-                    </h2>
-                    <h2>
-                        <strong class="text-2xl">Total Paid : </strong
-                        ><span class="text-lg"
-                            >{{ $page.props.site?.currency }}
-                            {{ formatCurrency(invoice.paid) }}</span
-                        >
-                    </h2>
-                    <h2>
-                        <strong class="text-2xl">Total Due : </strong
-                        ><span class="text-lg"
-                            >{{ $page.props.site?.currency }}
-                            {{
-                                formatCurrency(invoice.sub_total - invoice.paid)
-                            }}</span
-                        >
-                    </h2>
-                </div>
-            </div>
-
-            <div class="flex justify-end" v-if="invoice.status != 'paid'">
-                <div class="flex gap-2">
-                    <select
-                        class="p-1.5 rounded bg-teal-500 border border-teal-500 focus:border-teal-500"
-                    >
-                        <option value="debit">Debit</option>
-                        <option value="credit">Credit</option>
-                    </select>
-
-                    <button
-                        class="p-2 rounded bg-teal-500 border-0"
-                        @click="openPaymentModal"
-                    >
-                        Pay Now
-                    </button>
-                </div>
+                <table class=" w-md">
+                    <tbody>
+                        <tr class="text-lg">
+                            <td class="p-1.5">Invoice</td>
+                            <td class="p-1.5 text-end">
+                                # {{ invoice.invoice }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-1.5">Status</td>
+                            <td class="p-1.5 text-end">
+                                <span
+                                    class="p-0.5 rounded text-white text-xs"
+                                    :class="statusColor(invoice.status)"
+                                >
+                                    {{ invoice.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-1.5">Invoice Date</td>
+                            <td class="p-1.5 text-end">{{ formatDate(invoice.invoice_date) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="p-1.5">Due Date</td>
+                            <td class="p-1.5 text-end">{{ formatDate(invoice.updated_at) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="p-1.5">Amount Due</td>
+                            <td class="p-1.5 text-end">{{ $page.props.site?.currency }} {{ formatCurrency(invoice.sub_total - invoice.paid) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -199,30 +155,30 @@ function downloadPdf() {
             <table class="min-w-full">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="px-3 py-2">#</th>
-                        <th class="px-3 py-2">Item Name</th>
-                        <th class="px-3 py-2">Price</th>
-                        <th class="px-3 py-2">Qty</th>
-                        <th class="px-3 py-2">Total</th>
+                        <th class="p-1.5">#</th>
+                        <th class="p-1.5">Item Name</th>
+                        <th class="p-1.5">Price</th>
+                        <th class="p-1.5">Qty</th>
+                        <th class="p-1.5">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, $i) in invoice.items" :key="item.id">
-                        <td class="px-3 py-1">
+                        <td class="p-1.5">
                             {{ $i + 1 }}
                         </td>
-                        <td class="px-3 py-2">
+                        <td class="p-1.5 text-center">
                             {{ item.item_name }}
                         </td>
-                        <td class="px-3 py-2">
-                            {{ $page.props.site?.currency }}
+                        <td class="p-1.5 text-center">
+                        {{ $page.props.site?.currency }}
                             {{ formatCurrency(item.price) }}
                         </td>
-                        <td class="px-3 py-2">
+                        <td class="p-1.5 text-center">
                             {{ item.qty }}
                         </td>
-                        <td class="px-3 py-2 text-end">
-                            {{ $page.props.site?.currency }}
+                        <td class="p-1.5 text-end">
+                        {{ $page.props.site?.currency }}
                             {{ formatCurrency(item.price * item.qty) }}
                         </td>
                     </tr>
@@ -231,50 +187,50 @@ function downloadPdf() {
             <table class="flex justify-end">
                 <tbody>
                     <tr>
-                        <td class="w-60 px-3 py-3">Subtotal</td>
-                        <td class="w-60 py-3 px-3 text-end">
+                        <td class="p-1.5 w-60">Subtotal</td>
+                        <td class="p-1.5 w-60 text-end">
                             {{ $page.props.site?.currency }}
                             {{ formatCurrency(invoice.sub_total) }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="w-40 py-3 px-3">Discount</td>
-                        <td class="w-40 py-3 px-3 text-end">
+                        <td class="p-1.5">Discount</td>
+                        <td class="p-1.5 text-end">
                             {{ $page.props.site?.currency }}
                             {{ formatCurrency(invoice.total_discount) }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="w-40 py-3 px-3">Tax</td>
-                        <td class="w-40 py-3 px-3 text-end">
+                        <td class="p-1.5">Tax</td>
+                        <td class="p-1.5 text-end">
                             {{ $page.props.site?.currency }}
                             {{ formatCurrency(invoice.total_tax) }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="w-40 py-3 px-3">Total</td>
-                        <td class="w-40 py-3 px-3 text-end">
+                        <td class="p-1.5">Total</td>
+                        <td class="p-1.5 text-end">
                             {{ $page.props.site?.currency }}
                             {{ formatCurrency(invoice.total) }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="w-40 py-3 px-3">Round Value</td>
-                        <td class="w-40 py-3 px-3 text-end">
+                        <td class="p-1.5">Round Value</td>
+                        <td class="p-1.5 text-end">
                             {{ $page.props.site?.currency }}
                             {{ formatCurrency(invoice.round_value) }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="w-40 py-3 px-3">Total Paid</td>
-                        <td class="w-40 py-3 px-3 text-end">
+                        <td class="p-1.5">Total Paid</td>
+                        <td class="p-1.5 text-end">
                             {{ $page.props.site?.currency }}
                             {{ formatCurrency(invoice.paid) }}
                         </td>
                     </tr>
                     <tr class="text-2xl">
-                        <td class="w-40 py-3 px-3">Amount Due</td>
-                        <td class="w-40 py-3 px-3 text-end">
+                        <td class="p-1.5">Amount Due</td>
+                        <td class="p-1.5 text-end">
                             {{ $page.props.site?.currency }}
                             {{
                                 formatCurrency(invoice.sub_total - invoice.paid)
@@ -321,10 +277,8 @@ function downloadPdf() {
                         <td class="px-3 py-2">
                             <span class="p-1 bg-green-300 rounded">{{ t.status }}</span>
                         </td>
-                        <td
-                            class="px-3 py-2 font-semibold text-green-600 text-end"
-                        >
-                            {{ $page.props.site?.currency }} {{ t.amount }}
+                        <td class="px-3 py-2 font-semibold text-green-600 text-end">
+                           {{ $page.props.site?.currency }} {{ t.amount }}
                         </td>
                     </tr>
 
@@ -340,71 +294,6 @@ function downloadPdf() {
         <div class="border rounded-sm bg-gray-100 mt-5 border-gray-300 p-3">
             <p class="mb-2 text-xl">Invoice Termes & conditions</p>
             <p v-html="invoice.terms"></p>
-        </div>
-
-        <div class="flex justify-end">
-            <div class="flex gap-2 mt-4">
-                <button
-                    @click="downloadPdf"
-                    class="p-2 rounded bg-teal-500 text-white"
-                >
-                    <i class="fa-regular fa-file-pdf"></i> Download Pdf
-                </button>
-
-                <button
-                    type="button"
-                    @click="newTab"
-                    class="p-2 rounded bg-indigo-500 border-0 text-white"
-                >
-                    <i class="fa-solid fa-print"></i> Printable Version
-                </button>
-            </div>
-        </div>
-
-        <!-- Payment Modal -->
-        <div
-            v-if="showPaymentModal"
-            class="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50"
-            @click.self="closePaymentModal"
-        >
-            <div class="bg-white p-5 rounded shadow-lg w-xl">
-                <h2
-                    class="text-lg font-bold mb-3 border-b border-b-gray-300 pb-2"
-                >
-                    Payment Details
-                </h2>
-
-                <div>
-                    <h2 class="text-end">
-                        <strong>Invoice Total : </strong>
-                        <span>
-                            {{ $page.props.site?.currency }}
-                            {{ formatCurrency(invoice.sub_total) }}
-                        </span>
-                    </h2>
-                    <div>
-                        <h2 class="text-2xl font-bold">Invoice</h2>
-                        <h3 class="text-md mt-2 mb-5">
-                            # {{ invoice.invoice }}
-                        </h3>
-                        <div class="flex flex-col gap-2">
-                            <p>Make a Payment to Our Bank Account</p>
-                            <p>Bank Name: Butch Bangla Bank Limited</p>
-                            <p>Account Name: Md. Rajib</p>
-                            <p>Account Number: 107.101.51882</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-end gap-2 mt-4">
-                    <button
-                        @click="closePaymentModal"
-                        class="px-3 py-1 bg-gray-300 rounded"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
 </template>

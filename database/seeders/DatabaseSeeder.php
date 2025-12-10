@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             ModelHasRolesTableSeeder::class,
             ModelHasPermissionsTableSeeder::class,
             RoleHasPermissionsTableSeeder::class,
-            MenuUserTableSeeder::class
+            MenuUserTableSeeder::class,
+            SiteSettingsSeeder::class
         ]);
     }
 }

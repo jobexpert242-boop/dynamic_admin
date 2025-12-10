@@ -137,7 +137,20 @@ const emailForm = ref({
 function openEmailModal(invoice) {
     emailForm.value.to = invoice.customer.email || "";
     emailForm.value.subject = `Invoice #${invoice.invoice}`;
-    emailForm.value.message = `Hello ${invoice.customer.name},\n\nPlease find your invoice attached.`;
+    const invoiceUrl = `${window.location.origin}/invoice/${invoice.invoice}/${invoice.token}`;
+    emailForm.value.message = `
+        Hello ${invoice.customer.name},<br>
+        Please find your invoice details below:<br>
+        <strong>Invoice No:</strong> ${invoice.invoice}<br>
+        <strong>Amount:</strong> ${invoice.sub_total}<br>
+        <a href="${invoiceUrl}" 
+           style="color:#2563eb; font-weight:bold; text-decoration:underline;" 
+           target="_blank">
+            ➤ Click here to view your invoice
+        </a>
+        <br>
+        Thank you.
+    `;
     showEmailModal.value = true;
 }
 
@@ -145,16 +158,17 @@ function sendEmail(invoice) {
     sending.value = true;
 
     router.post(`/admin/send-invoice-email/${invoice.id}`, emailForm.value, {
-        preserveScroll: true,
         onSuccess: () => {
             sending.value = false;
             showEmailModal.value = false;
         },
-        onError: (errors) => {
-            console.log(errors);
+        onError: () => {
             sending.value = false;
         },
     });
+}
+function closePaymentModal2() {
+    showEmailModal.value = false;
 }
 </script>
 
@@ -750,58 +764,62 @@ function sendEmail(invoice) {
 
             <!-- Email Modal -->
             <div
-                v-if="showEmailModal"
-                class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50"
+                v-show="showEmailModal"
+                @click.self="closePaymentModal2"
+                class="fixed inset-0 bg-black/50 bg-opacity-30 flex justify-center items-center z-50"
             >
-                <div class="bg-white p-6 rounded shadow-lg w-96 relative">
-                    <h2 class="text-lg font-semibold mb-4">Send Email</h2>
+                <form @submit.prevent="sendEmail(invoice)">
+                    <div class="bg-white p-6 rounded shadow-lg w-96 relative">
+                        <h2 class="text-lg font-semibold mb-4">Send Email</h2>
 
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block font-medium">To</label>
-                            <input
-                                type="email"
-                                v-model="emailForm.to"
-                                class="border p-2 w-full rounded"
-                                readonly
-                            />
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block font-medium">To</label>
+                                <input
+                                    type="email"
+                                    v-model="emailForm.to"
+                                    class="border p-2 w-full rounded"
+                                    readonly
+                                />
+                            </div>
+
+                            <div>
+                                <label class="block font-medium">Subject</label>
+                                <input
+                                    type="text"
+                                    v-model="emailForm.subject"
+                                    class="border p-2 w-full rounded"
+                                />
+                            </div>
+
+                            <div>
+                                <label class="block font-medium">Message</label>
+                                <textarea
+                                    v-model="emailForm.message"
+                                    class="border p-2 w-full rounded h-32"
+                                ></textarea>
+                            </div>
                         </div>
 
-                        <div>
-                            <label class="block font-medium">Subject</label>
-                            <input
-                                type="text"
-                                v-model="emailForm.subject"
-                                class="border p-2 w-full rounded"
-                            />
-                        </div>
-
-                        <div>
-                            <label class="block font-medium">Message</label>
-                            <textarea
-                                v-model="emailForm.message"
-                                class="border p-2 w-full rounded h-32"
-                            ></textarea>
+                        <div class="flex justify-end gap-2 mt-4">
+                            <button
+                                type="button"
+                                @click="showEmailModal = false"
+                                class="px-3 py-1 bg-gray-300 rounded"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                class="px-3 py-1 bg-blue-600 text-white rounded"
+                                :disabled="sending"
+                            >
+                                <span v-if="!sending">Send</span>
+                                <span v-else>Sending...</span>
+                            </button>
                         </div>
                     </div>
-
-                    <div class="flex justify-end gap-2 mt-4">
-                        <button
-                            @click="showEmailModal = false"
-                            class="px-3 py-1 bg-gray-300 rounded"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            @click="sendEmail(invoice)"
-                            class="px-3 py-1 bg-blue-600 text-white rounded"
-                            :disabled="sending"
-                        >
-                            <span v-if="!sending">Send</span>
-                            <span v-else>Sending...</span>
-                        </button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </Layout>

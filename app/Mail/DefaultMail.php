@@ -10,8 +10,8 @@ class DefaultMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subject;
-    public $body;
+    public $subjectText;
+    public $bodyText;
     public $logo;
     public $company;
     public $company_address;
@@ -19,21 +19,21 @@ class DefaultMail extends Mailable
 
     public function __construct($subject, $body, $logo = null)
     {
-        $this->subject = $subject;
-        $this->body = $body;
-        $this->logo = $logo;
-        $this->company = config('app.name');
+        $this->subjectText = $subject;
+        $this->bodyText = $body;
+        $this->logo = $logo ?? asset('storage/images/logo.jpg');
+        $this->company = config('app.name', 'ComitsBD');
         $this->company_address = config('app.address', 'H 375, 3rd Floor, R 28, Mohakhali DOHS, Bangladesh');
         $this->company_email = config('mail.from.address', 'support@comitsbd.com');
     }
 
     public function build()
     {
-        return $this->subject($this->subject)
+        return $this->subject($this->subjectText)
             ->view('emails.default')
             ->with([
-                'subject' => $this->subject,
-                'body' => $this->body,
+                'subject' => $this->subjectText,
+                'body' => $this->bodyText,
                 'logo' => $this->logo,
                 'company' => $this->company,
                 'company_address' => $this->company_address,
@@ -41,3 +41,4 @@ class DefaultMail extends Mailable
             ]);
     }
 }
+

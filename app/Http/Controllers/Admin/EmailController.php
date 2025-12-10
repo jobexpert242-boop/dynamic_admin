@@ -10,17 +10,24 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
 {
-    public function sendInvoiceEmail(Request $request, Billing $invoice)
+    public function sendInvoiceEmail(Request $request, $id)
     {
         $request->validate([
-            'to' => 'required|email',
-            'subject' => 'required|string',
-            'message' => 'required|string',
+            "to" => "required|email",
+            "subject" => "required",
+            "message" => "required",
         ]);
 
-        Mail::to($request->to)
-            ->send(new DefaultMail($invoice, $request->subject, $request->message));
+        $invoice = Billing::with('customer')->findOrFail($id);
 
-        return response()->json(['message' => 'Email sent successfully.']);
+        Mail::to($request->to)->send(
+            new DefaultMail(
+                $request->subject,
+                $request->message,
+                asset('storage/images/logo.jpg')
+            )
+        );
+
+        return back()->with('status', 'Email sent successfully');
     }
 }

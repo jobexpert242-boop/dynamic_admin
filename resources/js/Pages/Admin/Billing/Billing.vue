@@ -217,11 +217,11 @@ function overlayClick(e) {
                         </td>
                     </tr>
 
-                    <!-- <tr v-if="props.invoices.length === 0">
+                    <tr v-if="props.invoices.length === 0">
                         <td colspan="11" class="py-3 text-gray-500">
                             <p class="text-center">No Invoice found.</p>
                         </td>
-                    </tr> -->
+                    </tr>
                 </tbody>
             </table>
 

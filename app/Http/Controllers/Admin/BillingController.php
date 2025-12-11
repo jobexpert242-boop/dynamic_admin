@@ -393,4 +393,55 @@ class BillingController extends Controller
     //     Mail::to('jobexpert242@gmail.com')->send(new DefaultMail('Invoice Generated', $body));
     //     return 'Email Sent!';
     // }
+
+    // billoing item
+    public function billingItem(Request $request)
+    {
+        $search = $request->input('search');
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+
+        if (!$search && !$dateFrom && !$dateTo) {
+            return Inertia::render('Admin/Billing/BillingItem', [
+                'billingItems' => [
+                    'data' => [],
+                    'total' => 0,
+                    'links' => [],
+                ],
+                'search' => "",
+                'date_from' => "",
+                'date_to' => "",
+            ]);
+        }
+
+        $query = BillingItem::with('billing');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('item_code', 'like', "%$search%")
+                    ->orWhere('item_name', 'like', "%$search%")
+                    ->orWhere('imei_sl', 'like', "%$search%")
+                    ->orWhereHas('billing', function ($bill) use ($search) {
+                        $bill->where('invoice', 'like', "%$search%");
+                    });
+            });
+        }
+
+        if ($dateFrom) {
+            $query->whereDate('warranty_date', '>=', $dateFrom);
+        }
+
+        if ($dateTo) {
+            $query->whereDate('warranty_date', '<=', $dateTo);
+        }
+
+        $billingItems = $query->paginate(10)->withQueryString();
+
+        return Inertia::render('Admin/Billing/BillingItem', [
+            'billingItems' => $billingItems,
+            'search' => $search,
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo,
+        ]);
+    }
 }

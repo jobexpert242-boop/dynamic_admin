@@ -96,6 +96,7 @@ Route::middleware(['auth', 'role:admin,sales,sup_admin,sub_admin'])->group(funct
         Route::put('/invoice/update/status/{invoice}', [BillingController::class, 'invoiceUpdateStatus'])->name('invoice.update.status');
         Route::post('/invoice/payment/store', [BillingController::class, 'storePayment'])->name('admin.invoice.payment.store');
         Route::post('/send-invoice-email/{id}', [EmailController::class, 'sendInvoiceEmail']);
+        Route::get('/billing/item',[BillingController::class,'billingItem'])->name('admin.billing.item');
     });
 });
 
